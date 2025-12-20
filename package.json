@@ -17,6 +17,7 @@
     "@visx/pattern": "^3.12.0",
     "apexcharts": "^5.3.6",
     "classnames": "^2.5.1",
+    "dayjs": "^1.11.19",
     "framer-motion": "^12.23.26",
     "lodash": "^4.17.21",
     "next": "16.1.0",

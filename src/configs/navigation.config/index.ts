@@ -29,16 +29,16 @@ const navigationConfig: NavigationTree[] = [
     //     subMenu: [],
     // },
     {
-        key: 'collapseMenu',
+        key: 'sekolah',
         path: '',
         title: 'Manajemen Sekolah',
-        translateKey: 'nav.collapseMenu.collapseMenu',
+        translateKey: 'nav.sekolah',
         icon: 'singleMenu',
         type: NAV_ITEM_TYPE_COLLAPSE,
         authority: [],
         subMenu: [
             {
-                key: 'collapseMenu.item1',
+                key: 'sekolah',
                 path: '/sekolah',
                 title: 'Daftar Sekolah',
                 translateKey: 'nav.sekolah',
@@ -59,10 +59,10 @@ const navigationConfig: NavigationTree[] = [
         authority: [],
         subMenu: [
             {
-                key: 'groupMenu.collapse',
+                key: 'domain',
                 path: '',
                 title: 'Manajemen Domain',
-                translateKey: 'nav.groupMenu.collapse.collapse',
+                translateKey: 'nav.domain',
                 icon: 'groupCollapseMenu',
                 type: NAV_ITEM_TYPE_COLLAPSE,
                 authority: [],
@@ -77,19 +77,19 @@ const navigationConfig: NavigationTree[] = [
                         authority: [],
                         subMenu: [],
                     },
-                    {
-                        key: 'groupMenu.collapse.item2',
-                        path: '',
-                        title: 'Menu item 2',
-                        translateKey: 'nav.groupMenu.collapse.item2',
-                        icon: '',
-                        type: NAV_ITEM_TYPE_ITEM,
-                        authority: [],
-                        subMenu: [],
-                    },
                 ],
             },
         ],
+    },
+    {
+        key: 'manajemenadmin',
+        path: '/manajemenadmin',
+        title: 'Manajemen Admin',
+        translateKey: 'nav.manajemenadmin',
+        icon: 'user',
+        type: NAV_ITEM_TYPE_ITEM,
+        authority: [],
+        subMenu: [],
     },
 ]
 

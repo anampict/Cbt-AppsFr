@@ -33,7 +33,7 @@ const CustomerListActionTools = () => {
                 variant="solid"
                 icon={<TbUserPlus className="text-xl" />}
                 onClick={() =>
-                    router.push('/sekolah/tambahsekolah')
+                    router.push('/domain/tambahdomain')
                 }
             >
                 Add new
