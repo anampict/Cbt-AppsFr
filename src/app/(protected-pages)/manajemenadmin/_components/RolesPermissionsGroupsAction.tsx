@@ -17,7 +17,7 @@ const RolesPermissionsGroupsAction = () => {
                     })
                 }
             >
-                Create role
+                Tambah
             </Button>
         </div>
     )

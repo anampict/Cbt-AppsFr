@@ -3,12 +3,14 @@
 import { useMemo } from 'react'
 import Avatar from '@/components/ui/Avatar'
 import Tag from '@/components/ui/Tag'
+import Tooltip from '@/components/ui/Tooltip'
 import Dropdown from '@/components/ui/Dropdown'
 import DataTable from '@/components/shared/DataTable'
 import { useRolePermissionsStore } from '../_store/rolePermissionsStore'
 import useAppendQueryParams from '@/utils/hooks/useAppendQueryParams'
+import { useRouter } from 'next/navigation' 
 import dayjs from 'dayjs'
-import { TbChevronDown } from 'react-icons/tb'
+import { TbChevronDown, TbPencil, TbEye } from 'react-icons/tb'
 import type { User } from '../types'
 import type { OnSortParam, ColumnDef, Row } from '@/components/shared/DataTable'
 
@@ -26,6 +28,8 @@ const statusColor: Record<string, string> = {
 const RolesPermissionsUserTable = (props: RolesPermissionsUserTableProps) => {
     const { userListTotal = 0, pageIndex = 1, pageSize = 10 } = props
 
+    const router = useRouter()
+
     const initialLoading = useRolePermissionsStore(
         (state) => state.initialLoading,
     )
@@ -41,6 +45,18 @@ const RolesPermissionsUserTable = (props: RolesPermissionsUserTableProps) => {
     )
 
     const { onAppendQueryParams } = useAppendQueryParams()
+
+    // ✅ Tambahkan fungsi handleEdit
+    const handleEdit = (user: User) => {
+        router.push(`/user-edit/${user.id}`)
+        // Atau sesuaikan dengan route Anda
+    }
+
+    // ✅ Tambahkan fungsi handleViewDetails
+    const handleViewDetails = (user: User) => {
+        router.push(`/user-details/${user.id}`)
+        // Atau sesuaikan dengan route Anda
+    }
 
     const handlePaginationChange = (page: number) => {
         onAppendQueryParams({
@@ -85,6 +101,38 @@ const RolesPermissionsUserTable = (props: RolesPermissionsUserTableProps) => {
         })
 
         setUserList(newUserList)
+    }
+
+    // ActionColumn component sudah benar
+    const ActionColumn = ({
+        onEdit,
+        onViewDetail,
+    }: {
+        onEdit: () => void
+        onViewDetail: () => void
+    }) => {
+        return (
+            <div className="flex items-center gap-3">
+                <Tooltip title="Edit">
+                    <div
+                        className={`text-xl cursor-pointer select-none font-semibold`}
+                        role="button"
+                        onClick={onEdit}
+                    >
+                        <TbPencil />
+                    </div>
+                </Tooltip>
+                <Tooltip title="View">
+                    <div
+                        className={`text-xl cursor-pointer select-none font-semibold`}
+                        role="button"
+                        onClick={onViewDetail}
+                    >
+                        <TbEye />
+                    </div>
+                </Tooltip>
+            </div>
+        )
     }
 
     const columns: ColumnDef<User>[] = useMemo(
@@ -180,6 +228,19 @@ const RolesPermissionsUserTable = (props: RolesPermissionsUserTableProps) => {
                         </Dropdown>
                     )
                 },
+            },
+            {
+                header: 'Action', // ✅ Tambahkan header text
+                id: 'action',
+                size: 100, // ✅ Optional: set width
+                cell: (props) => (
+                    <ActionColumn
+                        onEdit={() => handleEdit(props.row.original)}
+                        onViewDetail={() =>
+                            handleViewDetails(props.row.original)
+                        }
+                    />
+                ),
             },
         ],
         // eslint-disable-next-line react-hooks/exhaustive-deps

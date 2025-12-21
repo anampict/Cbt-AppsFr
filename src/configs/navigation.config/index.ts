@@ -17,17 +17,6 @@ const navigationConfig: NavigationTree[] = [
         authority: [],
         subMenu: [],
     },
-    /** Example purpose only, please remove */
-    // {
-    //     key: 'singleMenuItem',
-    //     path: '',
-    //     title: 'Daftar Sekolah',
-    //     translateKey: 'nav.singleMenuItem',
-    //     icon: 'singleMenu',
-    //     type: NAV_ITEM_TYPE_ITEM,
-    //     authority: [],
-    //     subMenu: [],
-    // },
     {
         key: 'sekolah',
         path: '',
@@ -50,17 +39,8 @@ const navigationConfig: NavigationTree[] = [
         ],
     },
     {
-        key: 'groupMenu',
-        path: '',
-        title: '',
-        translateKey: '',
-        icon: 'groupMenu',
-        type: NAV_ITEM_TYPE_TITLE,
-        authority: [],
-        subMenu: [
-            {
                 key: 'domain',
-                path: '',
+                path: '/domain',
                 title: 'Manajemen Domain',
                 translateKey: 'nav.domain',
                 icon: 'groupCollapseMenu',
@@ -68,7 +48,7 @@ const navigationConfig: NavigationTree[] = [
                 authority: [],
                 subMenu: [
                     {
-                        key: 'groupMenu.collapse.item1',
+                        key: 'domain',
                         path: '/domain',
                         title: 'Daftar Domain',
                         translateKey: 'nav.domain',
@@ -79,8 +59,6 @@ const navigationConfig: NavigationTree[] = [
                     },
                 ],
             },
-        ],
-    },
     {
         key: 'manajemenadmin',
         path: '/manajemenadmin',

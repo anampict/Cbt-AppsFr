@@ -20,6 +20,8 @@ import {
     TbFiles,
     TbFileChart,
     TbCheck,
+    TbEye,
+    TbEyeOff,
 } from 'react-icons/tb'
 import type { ReactNode } from 'react'
 
@@ -48,8 +50,11 @@ const RolesPermissionsAccessDialog = () => {
     const roleDialog = useRolePermissionsStore((state) => state.roleDialog)
 
     const [accessRight, setAccessRight] = useState<Record<string, string[]>>({})
+    const [showPassword, setShowPassword] = useState(false)
 
     const roleNameRef = useRef<HTMLInputElement>(null)
+    const emailRef = useRef<HTMLInputElement>(null)
+    const passwordRef = useRef<HTMLInputElement>(null)
     const descriptionRef = useRef<HTMLTextAreaElement>(null)
 
     const newId = useUniqueId('role-')
@@ -59,6 +64,7 @@ const RolesPermissionsAccessDialog = () => {
             type: '',
             open: false,
         })
+        setShowPassword(false)
     }
 
     const handleUpdate = async () => {
@@ -72,6 +78,8 @@ const RolesPermissionsAccessDialog = () => {
         newRoleList.push({
             id: newId,
             name: roleNameRef.current?.value || `Untitle-${newId}`,
+            email: emailRef.current?.value || '',
+            password: passwordRef.current?.value || '',
             description: descriptionRef.current?.value || '',
             users: [],
             accessRight,
@@ -112,97 +120,35 @@ const RolesPermissionsAccessDialog = () => {
             onClose={handleClose}
             onRequestClose={handleClose}
         >
-            <h4>{roleDialog.type === 'new' ? 'Create role' : modules?.name}</h4>
+            <h4>{roleDialog.type === 'new' ? 'Tambah Admin' : modules?.name}</h4>
             <ScrollBar className="mt-6 max-h-[600px] overflow-y-auto">
                 <div className="px-4">
                     {roleDialog.type === 'new' && (
                         <>
-                            <FormItem label="Role name">
+                            <FormItem label="Nama">
                                 <Input ref={roleNameRef} />
                             </FormItem>
-                            <FormItem label="Description">
-                                <Input ref={descriptionRef} textArea />
+                            <FormItem label="Email">
+                                <Input ref={emailRef} type="email" />
                             </FormItem>
-                            <span className="font-semibold mb-2">
-                                Permission
-                            </span>
+                            <FormItem label="Password">
+                                <div className="relative">
+                                    <Input 
+                                        ref={passwordRef} 
+                                        type={showPassword ? 'text' : 'password'}
+                                        className="pr-10"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 cursor-pointer text-xl"
+                                    >
+                                        {showPassword ? <TbEyeOff /> : <TbEye />}
+                                    </button>
+                                </div>
+                            </FormItem>
                         </>
                     )}
-                    {accessModules.map((module, index) => (
-                        <div
-                            key={module.id}
-                            className={classNames(
-                                'flex flex-col md:flex-row md:items-center justify-between gap-4 py-6 border-gray-200 dark:border-gray-600',
-                                !isLastChild(accessModules, index) &&
-                                    'border-b',
-                            )}
-                        >
-                            <div className="flex items-center gap-4">
-                                <Avatar
-                                    className="bg-transparent dark:bg-transparent p-2 border-2 border-gray-200 dark:border-gray-600 text-primary"
-                                    size={50}
-                                    icon={moduleIcon[module.id]}
-                                    shape="round"
-                                />
-                                <div>
-                                    <h6 className="font-bold">{module.name}</h6>
-                                    <span>{module.description}</span>
-                                </div>
-                            </div>
-                            <div className="flex items-center gap-4">
-                                <Segment
-                                    className="bg-transparent dark:bg-transparent"
-                                    selectionType="multiple"
-                                    value={modules?.accessRight[module.id]}
-                                    onChange={(val) =>
-                                        handleChange(val as string[], module.id)
-                                    }
-                                >
-                                    {module.accessor.map((access) => (
-                                        <Segment.Item
-                                            key={module.id + access.value}
-                                            value={access.value}
-                                        >
-                                            {({
-                                                active,
-                                                onSegmentItemClick,
-                                            }) => {
-                                                return (
-                                                    <Button
-                                                        variant="default"
-                                                        icon={
-                                                            active ? (
-                                                                <TbCheck className="text-primary text-xl" />
-                                                            ) : (
-                                                                <></>
-                                                            )
-                                                        }
-                                                        active={active}
-                                                        type="button"
-                                                        className="md:min-w-[100px]"
-                                                        size="sm"
-                                                        customColorClass={({
-                                                            active,
-                                                        }) =>
-                                                            classNames(
-                                                                active &&
-                                                                    'bg-transparent dark:bg-transparent text-primary border-primary ring-1 ring-primary',
-                                                            )
-                                                        }
-                                                        onClick={
-                                                            onSegmentItemClick
-                                                        }
-                                                    >
-                                                        {access.label}
-                                                    </Button>
-                                                )
-                                            }}
-                                        </Segment.Item>
-                                    ))}
-                                </Segment>
-                            </div>
-                        </div>
-                    ))}
                     <div className="flex justify-end mt-6">
                         <Button
                             className="ltr:mr-2 rtl:ml-2"
@@ -219,7 +165,7 @@ const RolesPermissionsAccessDialog = () => {
                                     : handleSubmit
                             }
                         >
-                            {roleDialog.type === 'edit' ? 'Update' : 'Create'}
+                            {roleDialog.type === 'edit' ? 'Update' : 'Tambah'}
                         </Button>
                     </div>
                 </div>

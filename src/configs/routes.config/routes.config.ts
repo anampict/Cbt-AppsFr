@@ -10,6 +10,30 @@ export const protectedRoutes: Routes = {
             pageContainerType: 'contained',
         },
     },
+    '/sekolah': {
+        key: 'sekolah',
+        authority: [],
+        meta: {
+            pageBackgroundType: 'plain',
+            pageContainerType: 'contained',
+        },
+    },
+    '/domain': {
+        key: 'domain',
+        authority: [],
+        meta: {
+            pageBackgroundType: 'plain',
+            pageContainerType: 'contained',
+        },
+    },
+    '/manajemenadmin': {
+        key: 'manajemenadmin',
+        authority: [],
+        meta: {
+            pageBackgroundType: 'plain',
+            pageContainerType: 'contained',
+        },
+    },
 }
 
 export const publicRoutes: Routes = {}

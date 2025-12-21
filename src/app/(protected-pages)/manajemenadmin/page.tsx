@@ -24,12 +24,11 @@ export default async function Page({ searchParams }: PageProps) {
             <Container>
                 <div className="bg-white rounded-lg p-6">
                      <div className="flex items-center justify-between mb-6">
-                    <h3>Roles & Permissions</h3>
+                    <h3>Daftar Admin Sekolah</h3>
                     <RolesPermissionsGroupsAction />
                 </div>
                 <div>
                     <div className="mb-6 flex flex-col gap-5">
-                        <h3>All accounts</h3>
                         <div className="flex-1">
                             <RolesPermissionsUserAction />
                         </div>
