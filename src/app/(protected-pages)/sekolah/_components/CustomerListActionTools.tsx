@@ -5,6 +5,7 @@ import { TbCloudDownload, TbUserPlus } from 'react-icons/tb'
 import { useRouter } from 'next/navigation'
 import { useCustomerListStore } from '../_store/customerListStore'
 import dynamic from 'next/dynamic'
+import { IoIosAddCircleOutline } from "react-icons/io";
 
 const CSVLink = dynamic(() => import('react-csv').then((mod) => mod.CSVLink), {
     ssr: false,
@@ -31,12 +32,12 @@ const CustomerListActionTools = () => {
             </CSVLink>
             <Button
                 variant="solid"
-                icon={<TbUserPlus className="text-xl" />}
+                icon={<IoIosAddCircleOutline className="text-xl" />}
                 onClick={() =>
                     router.push('/sekolah/tambahsekolah')
                 }
             >
-                Add new
+                Tambah
             </Button>
         </div>
     )

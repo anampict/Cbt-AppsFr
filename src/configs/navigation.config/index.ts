@@ -69,6 +69,16 @@ const navigationConfig: NavigationTree[] = [
         authority: [],
         subMenu: [],
     },
+    {
+        key: 'paket-limit',
+        path: '/paket-limit',
+        title: 'Paket Dan Limit',
+        translateKey: 'nav.manajemenadmin',
+        icon: 'paket',
+        type: NAV_ITEM_TYPE_ITEM,
+        authority: [],
+        subMenu: [],
+    },
 ]
 
 export default navigationConfig

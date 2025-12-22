@@ -93,7 +93,7 @@ const CustomerListTable = ({
     const { onAppendQueryParams } = useAppendQueryParams()
 
     const handleEdit = (customer: Customer) => {
-        router.push(`/concepts/customers/customer-edit/${customer.id}`)
+        router.push(`/sekolah/editsekolah/${customer.id}`)
     }
 
     const handleViewDetails = (customer: Customer) => {

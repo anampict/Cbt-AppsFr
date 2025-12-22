@@ -34,6 +34,14 @@ export const protectedRoutes: Routes = {
             pageContainerType: 'contained',
         },
     },
+    '/paket-limit': {
+        key: 'paket-limit',
+        authority: [],
+        meta: {
+            pageBackgroundType: 'plain',
+            pageContainerType: 'contained',
+        },
+    },
 }
 
 export const publicRoutes: Routes = {}
