@@ -97,7 +97,7 @@ const CustomerListTable = ({
     }
 
     const handleViewDetails = (customer: Customer) => {
-        router.push(`/concepts/customers/customer-details/${customer.id}`)
+        router.push(`/sekolah/detailsekolah/${customer.id}`)
     }
 
     const columns: ColumnDef<Customer>[] = useMemo(

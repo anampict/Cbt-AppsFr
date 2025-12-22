@@ -93,11 +93,11 @@ const CustomerListTable = ({
     const { onAppendQueryParams } = useAppendQueryParams()
 
     const handleEdit = (customer: Customer) => {
-        router.push(`/concepts/customers/customer-edit/${customer.id}`)
+        router.push(`/domain/editdomain/${customer.id}`)
     }
 
     const handleViewDetails = (customer: Customer) => {
-        router.push(`/concepts/customers/customer-details/${customer.id}`)
+        router.push(`/domain/detaildomain/${customer.id}`)
     }
 
     const columns: ColumnDef<Customer>[] = useMemo(
