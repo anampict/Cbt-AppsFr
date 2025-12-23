@@ -52,13 +52,13 @@ const RolesPermissionsUserTable = (props: RolesPermissionsUserTableProps) => {
 
   // Tambahkan fungsi handleEdit
   const handleEdit = (user: User) => {
-    router.push(`/manajemenadmin/editadmin/${user.id}`);
+    router.push(`/paket-limit/editpaket/${user.id}`);
     // Atau sesuaikan dengan route Anda
   };
 
   // ✅ Tambahkan fungsi handleViewDetails
   const handleViewDetails = (user: User) => {
-    router.push(`/manajemenadmin/detailadmin/${user.id}`);
+    router.push(`/paket-limit/detailpaket/${user.id}`);
     // Atau sesuaikan dengan route Anda
   };
 
