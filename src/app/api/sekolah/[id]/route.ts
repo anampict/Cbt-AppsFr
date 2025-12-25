@@ -12,6 +12,8 @@ type RouteParams = {
 
 export async function GET(request: NextRequest, { params }: RouteParams) {
     try {
+        const { id } = await params
+        
         const session = await auth()
         
         if (!session?.user) {
@@ -30,7 +32,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
         }
 
         const response = await axios.get(
-            `${BACKEND_URL}/sekolah/${params.id}`,
+            `${BACKEND_URL}/sekolah/${id}`,
             {
                 headers: {
                     'Authorization': `Bearer ${backendToken}`,
@@ -51,6 +53,8 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 
 export async function PUT(request: NextRequest, { params }: RouteParams) {
     try {
+        const { id } = await params
+        
         const session = await auth()
         
         if (!session?.user) {
@@ -71,7 +75,7 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
         const formData = await request.formData()
 
         const response = await axios.put(
-            `${BACKEND_URL}/sekolah/${params.id}`,
+            `${BACKEND_URL}/sekolah/${id}`,
             formData,
             {
                 headers: {
@@ -94,6 +98,8 @@ export async function PUT(request: NextRequest, { params }: RouteParams) {
 
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
     try {
+        const { id } = await params
+        
         const session = await auth()
         
         if (!session?.user) {
@@ -112,7 +118,7 @@ export async function DELETE(request: NextRequest, { params }: RouteParams) {
         }
 
         const response = await axios.delete(
-            `${BACKEND_URL}/sekolah/${params.id}`,
+            `${BACKEND_URL}/sekolah/${id}`,
             {
                 headers: {
                     'Authorization': `Bearer ${backendToken}`,

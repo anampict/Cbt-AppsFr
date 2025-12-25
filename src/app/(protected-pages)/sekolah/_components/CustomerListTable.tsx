@@ -1,15 +1,19 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import Avatar from "@/components/ui/Avatar";
 import Tag from "@/components/ui/Tag";
 import Tooltip from "@/components/ui/Tooltip";
 import DataTable from "@/components/shared/DataTable";
+import ConfirmDialog from "@/components/shared/ConfirmDialog";
+import Notification from "@/components/ui/Notification";
+import toast from "@/components/ui/toast";
 import { useCustomerListStore } from "../_store/customerListStore";
 import useAppendQueryParams from "@/utils/hooks/useAppendQueryParams";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { TbPencil, TbEye } from "react-icons/tb";
+import { TbPencil, TbEye, TbTrash } from "react-icons/tb";
+import SekolahService from "@/service/SekolahService";
 import type {
   OnSortParam,
   ColumnDef,
@@ -54,9 +58,11 @@ const NameColumn = ({ row }: { row: Customer }) => {
 const ActionColumn = ({
   onEdit,
   onViewDetail,
+  onDelete,
 }: {
   onEdit: () => void;
   onViewDetail: () => void;
+  onDelete: () => void;
 }) => {
   return (
     <div className="flex items-center gap-3">
@@ -78,6 +84,15 @@ const ActionColumn = ({
           <TbEye />
         </div>
       </Tooltip>
+      <Tooltip title="Delete">
+        <div
+          className={`text-xl cursor-pointer select-none font-semibold text-error`}
+          role="button"
+          onClick={onDelete}
+        >
+          <TbTrash />
+        </div>
+      </Tooltip>
     </div>
   );
 };
@@ -88,6 +103,12 @@ const CustomerListTable = ({
   pageSize = 10,
 }: CustomerListTableProps) => {
   const router = useRouter();
+  const [deleteConfirm, setDeleteConfirm] = useState({
+    isOpen: false,
+    customerId: "",
+    customerName: "",
+  });
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const customerList = useCustomerListStore((state) => state.customerList);
   const selectedCustomer = useCustomerListStore(
@@ -111,6 +132,39 @@ const CustomerListTable = ({
 
   const handleViewDetails = (customer: Customer) => {
     router.push(`/sekolah/detailsekolah/${customer.id}`);
+  };
+
+  const handleDeleteClick = (customer: Customer) => {
+    setDeleteConfirm({
+      isOpen: true,
+      customerId: customer.id,
+      customerName: customer.nama || customer.name || "Sekolah ini",
+    });
+  };
+
+  const handleConfirmDelete = async () => {
+    setIsDeleting(true);
+    try {
+      await SekolahService.deleteSekolah(deleteConfirm.customerId);
+      toast.push(
+        <Notification type="success">Sekolah berhasil dihapus!</Notification>,
+        {
+          placement: "top-center",
+        }
+      );
+      setDeleteConfirm({ isOpen: false, customerId: "", customerName: "" });
+      router.refresh();
+    } catch (error) {
+      console.error("Delete error:", error);
+      toast.push(
+        <Notification type="danger">Gagal menghapus sekolah!</Notification>,
+        {
+          placement: "top-center",
+        }
+      );
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   const columns: ColumnDef<Customer>[] = useMemo(
@@ -150,6 +204,7 @@ const CustomerListTable = ({
           <ActionColumn
             onEdit={() => handleEdit(props.row.original)}
             onViewDetail={() => handleViewDetails(props.row.original)}
+            onDelete={() => handleDeleteClick(props.row.original)}
           />
         ),
       },
@@ -192,28 +247,49 @@ const CustomerListTable = ({
   };
 
   return (
-    <DataTable
-      selectable
-      columns={columns}
-      data={customerList}
-      noData={customerList.length === 0}
-      skeletonAvatarColumns={[0]}
-      skeletonAvatarProps={{ width: 28, height: 28 }}
-      loading={isInitialLoading}
-      pagingData={{
-        total: customerListTotal,
-        pageIndex,
-        pageSize,
-      }}
-      checkboxChecked={(row) =>
-        selectedCustomer.some((selected) => selected.id === row.id)
-      }
-      onPaginationChange={handlePaginationChange}
-      onSelectChange={handleSelectChange}
-      onSort={handleSort}
-      onCheckBoxChange={handleRowSelect}
-      onIndeterminateCheckBoxChange={handleAllRowSelect}
-    />
+    <>
+      <DataTable
+        selectable
+        columns={columns}
+        data={customerList}
+        noData={customerList.length === 0}
+        skeletonAvatarColumns={[0]}
+        skeletonAvatarProps={{ width: 28, height: 28 }}
+        loading={isInitialLoading}
+        pagingData={{
+          total: customerListTotal,
+          pageIndex,
+          pageSize,
+        }}
+        checkboxChecked={(row) =>
+          selectedCustomer.some((selected) => selected.id === row.id)
+        }
+        onPaginationChange={handlePaginationChange}
+        onSelectChange={handleSelectChange}
+        onSort={handleSort}
+        onCheckBoxChange={handleRowSelect}
+        onIndeterminateCheckBoxChange={handleAllRowSelect}
+      />
+      <ConfirmDialog
+        isOpen={deleteConfirm.isOpen}
+        type="danger"
+        title="Hapus Sekolah"
+        onClose={() =>
+          setDeleteConfirm({ isOpen: false, customerId: "", customerName: "" })
+        }
+        onCancel={() =>
+          setDeleteConfirm({ isOpen: false, customerId: "", customerName: "" })
+        }
+        onConfirm={handleConfirmDelete}
+        confirmText="Hapus"
+        cancelText="Batal"
+        confirmButtonProps={{ loading: isDeleting }}
+      >
+        <p>
+          Apakah Anda yakin ingin menghapus <strong>{deleteConfirm.customerName}</strong>?
+        </p>
+      </ConfirmDialog>
+    </>
   );
 };
 

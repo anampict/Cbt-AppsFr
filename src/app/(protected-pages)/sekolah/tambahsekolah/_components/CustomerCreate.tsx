@@ -10,7 +10,7 @@ import sleep from "@/utils/sleep";
 import { TbTrash } from "react-icons/tb";
 import { useRouter } from "next/navigation";
 import SekolahService from "@/service/SekolahService";
-import type { CustomerFormSchema } from "@/components/views/formtambahsekolah/CustomerForm";
+import type { CustomerFormSchema } from "@/components/views/formtambahsekolah/types";
 
 const CustomerEdit = () => {
   const router = useRouter();

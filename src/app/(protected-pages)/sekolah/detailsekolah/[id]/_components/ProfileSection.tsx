@@ -1,209 +1,143 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import Card from '@/components/ui/Card'
-import Button from '@/components/ui/Button'
-import Avatar from '@/components/ui/Avatar/Avatar'
-import Notification from '@/components/ui/Notification'
-import Tooltip from '@/components/ui/Tooltip'
-import toast from '@/components/ui/toast'
-import ConfirmDialog from '@/components/shared/ConfirmDialog'
-import dayjs from 'dayjs'
-import { HiPencil, HiOutlineTrash } from 'react-icons/hi'
-import {
-    FaXTwitter,
-    FaFacebookF,
-    FaLinkedinIn,
-    FaPinterestP,
-} from 'react-icons/fa6'
-import { useRouter } from 'next/navigation'
+import { useState } from "react";
+import Card from "@/components/ui/Card";
+import Button from "@/components/ui/Button";
+import Avatar from "@/components/ui/Avatar/Avatar";
+import Notification from "@/components/ui/Notification";
+import Tooltip from "@/components/ui/Tooltip";
+import toast from "@/components/ui/toast";
+import ConfirmDialog from "@/components/shared/ConfirmDialog";
+import { HiPencil, HiOutlineTrash } from "react-icons/hi";
+import SekolahService from "@/service/SekolahService";
+import { useRouter } from "next/navigation";
 
-type CustomerInfoFieldProps = {
-    title?: string
-    value?: string
-}
+type SekolahInfoFieldProps = {
+  title?: string;
+  value?: string;
+};
 
 type ProfileSectionProps = {
-    data: Partial<{
-        id: string
-        img: string
-        name: string
-        email: string
-        lastOnline: number
-        personalInfo: {
-            location: string
-            title: string
-            birthday: string
-            phoneNumber: string
-            facebook: string
-            twitter: string
-            pinterest: string
-            linkedIn: string
-        }
-    }>
-}
+  data: Partial<{
+    id: string;
+    logoUrl: string;
+    nama: string;
+    npsn: string;
+    email: string;
+    telepon: string;
+    alamat: string;
+    kota: string;
+    provinsi: string;
+    createdAt: string;
+    updatedAt: string;
+  }>;
+};
 
-const CustomerInfoField = ({ title, value }: CustomerInfoFieldProps) => {
-    return (
-        <div>
-            <span className="font-semibold">{title}</span>
-            <p className="heading-text font-bold">{value}</p>
-        </div>
-    )
-}
+const SekolahInfoField = ({ title, value }: SekolahInfoFieldProps) => {
+  return (
+    <div>
+      <span className="font-semibold text-sm text-gray-600 dark:text-gray-400">
+        {title}
+      </span>
+      <p className="heading-text font-bold mt-1">{value || "-"}</p>
+    </div>
+  );
+};
 
 const ProfileSection = ({ data = {} }: ProfileSectionProps) => {
-    const router = useRouter()
+  const router = useRouter();
 
-    const [dialogOpen, setDialogOpen] = useState(false)
+  const [dialogOpen, setDialogOpen] = useState(false);
 
-    const handleSocialNavigate = (link: string = '') => {
-        window.open(`https://${link}`, '_blank', 'rel=noopener noreferrer')
+  const handleDialogClose = () => {
+    setDialogOpen(false);
+  };
+
+  const handleDialogOpen = () => {
+    setDialogOpen(true);
+  };
+
+  const handleDelete = async () => {
+    try {
+      await SekolahService.deleteSekolah(data.id!);
+      setDialogOpen(false);
+      router.push("/sekolah");
+      toast.push(
+        <Notification title={"Berhasil Dihapus"} type="success">
+          Sekolah berhasil dihapus
+        </Notification>
+      );
+    } catch (error: any) {
+      console.error("Error deleting sekolah:", error);
+      toast.push(
+        <Notification title={"Gagal"} type="danger">
+          {error.response?.data?.message || "Gagal menghapus sekolah"}
+        </Notification>
+      );
     }
+  };
 
-    const handleDialogClose = () => {
-        setDialogOpen(false)
-    }
+  const handleEdit = () => {
+    router.push(`/sekolah/editsekolah/${data.id}`);
+  };
 
-    const handleDialogOpen = () => {
-        setDialogOpen(true)
-    }
+  return (
+    <Card className="w-full">
+      <div className="flex justify-end">
+        <Tooltip title="Edit sekolah">
+          <button
+            className="close-button button-press-feedback"
+            type="button"
+            onClick={handleEdit}
+          >
+            <HiPencil />
+          </button>
+        </Tooltip>
+      </div>
+      <div className="flex flex-col xl:justify-between h-full 2xl:min-w-[360px] mx-auto">
+        <div className="flex xl:flex-col items-center gap-4 mt-6">
+          <Avatar size={90} shape="circle" src={data.logoUrl || data.img}>
+            {!data.logoUrl && !data.img && data.nama?.charAt(0).toUpperCase()}
+          </Avatar>
+          <h4 className="font-bold">{data.nama || data.name}</h4>
+        </div>
+        <div className="grid grid-cols-1 gap-y-7 mt-10">
+          <SekolahInfoField title="NPSN" value={data.npsn} />
+          <SekolahInfoField title="Email" value={data.email} />
+          <SekolahInfoField title="Telepon" value={data.telepon} />
+          <SekolahInfoField title="Alamat" value={data.alamat} />
+          <SekolahInfoField title="Kota" value={data.kota} />
+          <SekolahInfoField title="Provinsi" value={data.provinsi} />
+        </div>
+        <div className="flex flex-col gap-4 mt-10">
+          <Button
+            block
+            customColorClass={() =>
+              "text-error hover:border-error hover:ring-1 ring-error hover:text-error"
+            }
+            icon={<HiOutlineTrash />}
+            onClick={handleDialogOpen}
+          >
+            Delete
+          </Button>
+        </div>
+        <ConfirmDialog
+          isOpen={dialogOpen}
+          type="danger"
+          title="Hapus Sekolah"
+          onClose={handleDialogClose}
+          onRequestClose={handleDialogClose}
+          onCancel={handleDialogClose}
+          onConfirm={handleDelete}
+        >
+          <p>
+            Apakah Anda yakin ingin menghapus sekolah ini? Tindakan ini tidak
+            dapat dibatalkan.
+          </p>
+        </ConfirmDialog>
+      </div>
+    </Card>
+  );
+};
 
-    const handleDelete = () => {
-        setDialogOpen(false)
-        router.push('/concepts/customers/customer-list')
-        toast.push(
-            <Notification title={'Successfully Deleted'} type="success">
-                Customer successfuly deleted
-            </Notification>,
-        )
-    }
-
-    const handleSendMessage = () => {
-        router.push('/concepts/chat')
-    }
-
-    const handleEdit = () => {
-        router.push(`/concepts/customers/customer-edit/${data.id}`)
-    }
-
-    return (
-        <Card className="w-full">
-            <div className="flex justify-end">
-                <Tooltip title="Edit customer">
-                    <button
-                        className="close-button button-press-feedback"
-                        type="button"
-                        onClick={handleEdit}
-                    >
-                        <HiPencil />
-                    </button>
-                </Tooltip>
-            </div>
-            <div className="flex flex-col xl:justify-between h-full 2xl:min-w-[360px] mx-auto">
-                <div className="flex xl:flex-col items-center gap-4 mt-6">
-                    <Avatar size={90} shape="circle" src={data.img} />
-                    <h4 className="font-bold">{data.name}</h4>
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 gap-y-7 gap-x-4 mt-10">
-                    <CustomerInfoField title="Email" value={data.email} />
-                    <CustomerInfoField
-                        title="Phone"
-                        value={data.personalInfo?.phoneNumber}
-                    />
-                    <CustomerInfoField
-                        title="Date of birth"
-                        value={data.personalInfo?.birthday}
-                    />
-                    <CustomerInfoField
-                        title="Last Online"
-                        value={dayjs
-                            .unix(data.lastOnline as number)
-                            .format('DD MMM YYYY hh:mm A')}
-                    />
-                    <div className="mb-7">
-                        <span>Social</span>
-                        <div className="flex mt-4 gap-2">
-                            <Button
-                                size="sm"
-                                icon={
-                                    <FaFacebookF className="text-[#2259f2]" />
-                                }
-                                onClick={() =>
-                                    handleSocialNavigate(
-                                        data.personalInfo?.facebook,
-                                    )
-                                }
-                            />
-                            <Button
-                                size="sm"
-                                icon={
-                                    <FaXTwitter className="text-black dark:text-white" />
-                                }
-                                onClick={() =>
-                                    handleSocialNavigate(
-                                        data.personalInfo?.twitter,
-                                    )
-                                }
-                            />
-                            <Button
-                                size="sm"
-                                icon={
-                                    <FaLinkedinIn className="text-[#155fb8]" />
-                                }
-                                onClick={() =>
-                                    handleSocialNavigate(
-                                        data.personalInfo?.linkedIn,
-                                    )
-                                }
-                            />
-                            <Button
-                                size="sm"
-                                icon={
-                                    <FaPinterestP className="text-[#df0018]" />
-                                }
-                                onClick={() =>
-                                    handleSocialNavigate(
-                                        data.personalInfo?.pinterest,
-                                    )
-                                }
-                            />
-                        </div>
-                    </div>
-                </div>
-                <div className="flex flex-col gap-4">
-                    <Button block variant="solid" onClick={handleSendMessage}>
-                        Send Messsage
-                    </Button>
-                    <Button
-                        block
-                        customColorClass={() =>
-                            'text-error hover:border-error hover:ring-1 ring-error hover:text-error'
-                        }
-                        icon={<HiOutlineTrash />}
-                        onClick={handleDialogOpen}
-                    >
-                        Delete
-                    </Button>
-                </div>
-                <ConfirmDialog
-                    isOpen={dialogOpen}
-                    type="danger"
-                    title="Delete customer"
-                    onClose={handleDialogClose}
-                    onRequestClose={handleDialogClose}
-                    onCancel={handleDialogClose}
-                    onConfirm={handleDelete}
-                >
-                    <p>
-                        Are you sure you want to delete this customer? All
-                        record related to this customer will be deleted as well.
-                        This action cannot be undone.
-                    </p>
-                </ConfirmDialog>
-            </div>
-        </Card>
-    )
-}
-
-export default ProfileSection
+export default ProfileSection;
