@@ -1,24 +1,23 @@
-'use client'
+"use client";
 
-import CustomerListSearch from './CustomerListSearch'
-import CustomerTableFilter from './CustomerListTableFilter'
-import useAppendQueryParams from '@/utils/hooks/useAppendQueryParams'
+import CustomerListSearch from "./CustomerListSearch";
+import useAppendQueryParams from "@/utils/hooks/useAppendQueryParams";
 
 const CustomersListTableTools = () => {
-    const { onAppendQueryParams } = useAppendQueryParams()
+  const { onAppendQueryParams } = useAppendQueryParams();
 
-    const handleInputChange = (query: string) => {
-        onAppendQueryParams({
-            query,
-        })
-    }
+  const handleInputChange = (query: string) => {
+    onAppendQueryParams({
+      query,
+      pageIndex: "1",
+    });
+  };
 
-    return (
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
-            <CustomerListSearch onInputChange={handleInputChange} />
-            <CustomerTableFilter />
-        </div>
-    )
-}
+  return (
+    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+      <CustomerListSearch onInputChange={handleInputChange} />
+    </div>
+  );
+};
 
-export default CustomersListTableTools
+export default CustomersListTableTools;

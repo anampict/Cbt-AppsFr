@@ -2,14 +2,8 @@ import { create } from 'zustand'
 import type { Customer, Filter } from '../types'
 
 export const initialFilterData = {
-    purchasedProducts: '',
-    purchaseChannel: [
-        'Retail Stores',
-        'Online Retailers',
-        'Resellers',
-        'Mobile Apps',
-        'Direct Sales',
-    ],
+    provinsi: '',
+    kota: '',
 }
 
 export type CustomersListState = {

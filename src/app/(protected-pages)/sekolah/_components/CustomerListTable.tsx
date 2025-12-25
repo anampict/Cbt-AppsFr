@@ -286,7 +286,8 @@ const CustomerListTable = ({
         confirmButtonProps={{ loading: isDeleting }}
       >
         <p>
-          Apakah Anda yakin ingin menghapus <strong>{deleteConfirm.customerName}</strong>?
+          Apakah Anda yakin ingin menghapus{" "}
+          <strong>{deleteConfirm.customerName}</strong>?
         </p>
       </ConfirmDialog>
     </>

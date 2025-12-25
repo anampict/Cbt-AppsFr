@@ -3,6 +3,7 @@
 import SignIn from "@/components/auth/SignIn";
 import { onSignInWithCredentials } from "@/server/actions/auth/handleSignIn";
 import handleOauthSignIn from "@/server/actions/auth/handleOauthSignIn";
+import Notification from "@/components/ui/Notification";
 import { REDIRECT_URL_KEY } from "@/constants/app.constant";
 import { useSearchParams } from "next/navigation";
 import { useCallback } from "react";
@@ -25,25 +26,20 @@ const SignInClient = () => {
           if (data?.error) {
             setMessage(data.error as string);
             toast.push(
-              <div className="text-red-600">
-                <strong>Login Failed:</strong> {data.error}
-              </div>,
+              <Notification type="danger">{data.error}</Notification>,
               {
-                placement: "top-end",
+                placement: "top-center",
               }
             );
             setSubmitting(false);
           } else {
-            // Show success toast
-            toast.push(
-              <div className="text-green-600">
-                <strong>Success!</strong> Login berhasil, redirecting...
-              </div>,
-              {
-                placement: "top-end",
-              }
-            );
-            // No need to setSubmitting(false) - page will redirect
+            // Mark in sessionStorage that login was successful
+            // This will trigger toast display on home page
+            if (typeof window !== "undefined") {
+              sessionStorage.setItem("loginSuccess", "true");
+            }
+            // Let NextAuth do the redirect
+            // Toast will be shown on the next page
           }
         })
         .catch((error) => {
@@ -51,17 +47,18 @@ const SignInClient = () => {
           // It's thrown by NextAuth to trigger automatic redirect
           if (error?.message === "NEXT_REDIRECT") {
             console.log("[handleSignIn] Redirecting after successful login");
+            if (typeof window !== "undefined") {
+              sessionStorage.setItem("loginSuccess", "true");
+            }
             return; // Silently ignore - redirect is happening
           }
 
           const errorMessage = error?.message || "Terjadi kesalahan saat login";
           setMessage(errorMessage);
           toast.push(
-            <div className="text-red-600">
-              <strong>Error:</strong> {errorMessage}
-            </div>,
+            <Notification type="danger">{errorMessage}</Notification>,
             {
-              placement: "top-end",
+              placement: "top-center",
             }
           );
           setSubmitting(false);
@@ -81,14 +78,9 @@ const SignInClient = () => {
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : "OAuth login failed";
-      toast.push(
-        <div className="text-red-600">
-          <strong>OAuth Error:</strong> {errorMessage}
-        </div>,
-        {
-          placement: "top-end",
-        }
-      );
+      toast.push(<Notification type="danger">{errorMessage}</Notification>, {
+        placement: "top-center",
+      });
     }
   };
 

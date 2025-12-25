@@ -45,8 +45,8 @@ export type GetCustomersListResponse = {
 }
 
 export type Filter = {
-    purchasedProducts: string
-    purchaseChannel: Array<string>
+    provinsi?: string
+    kota?: string
 }
 
 export type Customer = {

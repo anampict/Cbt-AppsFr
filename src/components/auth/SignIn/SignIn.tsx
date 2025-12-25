@@ -45,29 +45,12 @@ const SignIn = ({
       )}
       <SignInForm
         setMessage={setMessage}
-        passwordHint={
-          <div className="mb-7 mt-2">
-            <ActionLink
-              href={forgetPasswordUrl}
-              className="font-semibold heading-text mt-2 underline"
-              themeColor={false}
-            >
-              Forgot password
-            </ActionLink>
-          </div>
-        }
+        passwordHint={<div className="mb-7 mt-2"></div>}
         onSignIn={onSignIn}
       />
       <div>
         <div className="mt-6 text-center">
-          <span>{`Don't have an account yet?`} </span>
-          <ActionLink
-            href={signUpUrl}
-            className="heading-text font-bold"
-            themeColor={false}
-          >
-            Masuk
-          </ActionLink>
+          <span>{`Support by PT Putra Wisanggeni Satu.`} </span>
         </div>
       </div>
     </>

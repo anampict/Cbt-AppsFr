@@ -41,6 +41,8 @@ export const getSekolahList = async (_queryParams: {
         pageIndex = '1',
         pageSize = '10',
         query = '',
+        provinsi = '',
+        kota = '',
     } = queryParams
 
     const session = await auth()
@@ -66,6 +68,8 @@ export const getSekolahList = async (_queryParams: {
                     page: pageIndex,
                     limit: pageSize,
                     search: query || undefined,
+                    provinsi: provinsi || undefined,
+                    kota: kota || undefined,
                 },
                 headers: {
                     Authorization: `Bearer ${backendToken}`,
