@@ -31,15 +31,17 @@ export default {
                     email: user.email,
                     image: user.avatar,
                     authority: user.authority,
+                    backendToken: user.backendToken,
                 }
             },
         }),
     ],
     callbacks: {
         async jwt({ token, user }) {
-            // Persist the authority to the token right after signin
+            // Persist the authority and backend token to the token right after signin
             if (user) {
                 token.authority = user.authority
+                token.backendToken = user.backendToken
             }
             return token
         },
@@ -50,6 +52,7 @@ export default {
                 user: {
                     ...session.user,
                     id: token.sub,
+                    backendToken: token.backendToken,
                     /** Uncomment this if you want to enable role based access */
                     // authority: token.authority,
                 },

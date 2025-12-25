@@ -51,17 +51,49 @@ export type Filter = {
 
 export type Customer = {
     id: string
-    name: string
-    firstName: string
-    lastName: string
+    npsn: string
+    nama: string
+    alamat: string
+    kota: string
+    provinsi: string
+    telepon: string
     email: string
-    img: string
-    role: string
-    lastOnline: number
-    status: string
-    personalInfo: PersonalInfo
-    orderHistory: OrderHistory[]
-    paymentMethod: PaymentMethod[]
-    subscription: Subscription[]
-    totalSpending: number
+    createdAt: string
+    updatedAt: string
+    logoUrl?: string
+    _count?: {
+        siswas?: number
+        mataPelajarans?: number
+    }
+    // Legacy customer fields (for compatibility)
+    name?: string
+    firstName?: string
+    lastName?: string
+    img?: string
+    role?: string
+    lastOnline?: number
+    status?: string
+    personalInfo?: PersonalInfo
+    orderHistory?: OrderHistory[]
+    paymentMethod?: PaymentMethod[]
+    subscription?: Subscription[]
+    totalSpending?: number
+}
+
+export type Sekolah = {
+    id: string
+    npsn: string
+    nama: string
+    alamat: string
+    kota: string
+    provinsi: string
+    telepon: string
+    email: string
+    createdAt: string
+    updatedAt: string
+    logoUrl?: string
+    _count?: {
+        siswas?: number
+        mataPelajarans?: number
+    }
 }

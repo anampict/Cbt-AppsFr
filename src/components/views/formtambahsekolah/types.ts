@@ -1,27 +1,25 @@
 import type { Control, FieldErrors } from 'react-hook-form'
 
 export type OverviewFields = {
-    firstName: string
-    lastName: string
+    npsn: string
+    nama: string
     email: string
-    dialCode: string
-    phoneNumber: string
-    img: string
+    telepon: string
+    logo?: File | string
 }
 
 export type AddressFields = {
-    country: string
-    address: string
-    postcode: string
-    city: string
+    provinsi: string
+    alamat: string
+    kota: string
 }
 
 export type ProfileImageFields = {
-    img: string
+    logo?: File | string
 }
 
 export type TagsFields = {
-    tags: Array<{ value: string; label: string }>
+    tags?: Array<{ value: string; label: string }>
 }
 
 export type AccountField = {

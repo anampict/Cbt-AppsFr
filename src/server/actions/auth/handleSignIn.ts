@@ -16,6 +16,12 @@ export const onSignInWithCredentials = async (
             redirectTo: callbackUrl || appConfig.authenticatedEntryPath,
         })
     } catch (error) {
+        // NextAuth throws NEXT_REDIRECT error on successful login
+        // This is expected and should not be caught
+        if (error instanceof Error && error.message === 'NEXT_REDIRECT') {
+            throw error
+        }
+
         if (error instanceof AuthError) {
             /** Customize error message based on AuthError */
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -29,3 +35,4 @@ export const onSignInWithCredentials = async (
         throw error
     }
 }
+

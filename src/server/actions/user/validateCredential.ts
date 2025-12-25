@@ -1,19 +1,59 @@
 'use server'
 import type { SignInCredential } from '@/@types/auth'
-import { signInUserData } from '@/mock/data/authData'
-import sleep from '@/utils/sleep'
+import AuthService from '@/service/AuthService'
 
-const validateCredential = async (values: SignInCredential) => {
-    /** Implement your validation here, as this is just a mock */
+export interface ValidatedUser {
+    id: string
+    userName: string
+    email: string
+    avatar?: string
+    authority?: string
+    backendToken?: string
+}
+
+const validateCredential = async (values: SignInCredential): Promise<ValidatedUser | null> => {
+    /**
+     * Authenticate dengan backend API
+     * Request ke API backend dengan credentials yang diberikan
+     */
     const { email, password } = values
 
-    await sleep(80)
+    try {
+        console.log('[validateCredential] Attempting login for:', email)
+        
+        const response = await AuthService.login({ email, password })
+        
+        console.log('[validateCredential] Login response:', {
+            success: response.success,
+            hasData: !!response.data,
+            hasToken: !!response.access_token,
+        })
 
-    const user = signInUserData.find(
-        (user) => user.email === email && user.password === password,
-    )
+        if (response.success && response.data) {
+            const user: ValidatedUser = {
+                id: response.data.id,
+                userName: response.data.userName,
+                email: response.data.email,
+                avatar: response.data.avatar,
+                authority: response.data.authority,
+                backendToken: response.access_token,
+            }
+            console.log('[validateCredential] Login successful for user:', email)
+            return user
+        }
 
-    return user
+        console.warn(
+            '[validateCredential] Login failed - invalid response:',
+            response.message
+        )
+        return null
+    } catch (error) {
+        console.error('[validateCredential] Error:', {
+            message: error instanceof Error ? error.message : String(error),
+            error,
+        })
+        return null
+    }
 }
 
 export default validateCredential
