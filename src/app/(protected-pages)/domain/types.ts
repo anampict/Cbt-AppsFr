@@ -1,3 +1,40 @@
+export type Domain = {
+    id: string
+    domain: string
+    customDomain: string
+    sslEnabled: boolean
+    isActive: boolean
+    expiredAt: string
+    createdAt: string
+    updatedAt: string
+    sekolahId: string
+    sekolah: {
+        id: string
+        npsn: string
+        nama: string
+    }
+}
+
+export type GetDomainsListResponse = {
+    list: Domain[]
+    total: number
+}
+
+export type DomainFormData = {
+    domain: string
+    customDomain: string
+    sslEnabled: boolean
+    isActive: boolean
+    expiredAt: string
+    sekolahId: string
+}
+
+export type Filter = {
+    status: string
+    sekolah: string[]
+}
+
+// Legacy types - untuk backward compatibility
 type PersonalInfo = {
     location: string
     title: string
@@ -42,11 +79,6 @@ type Subscription = {
 export type GetCustomersListResponse = {
     list: Customer[]
     total: number
-}
-
-export type Filter = {
-    purchasedProducts: string
-    purchaseChannel: Array<string>
 }
 
 export type Customer = {
