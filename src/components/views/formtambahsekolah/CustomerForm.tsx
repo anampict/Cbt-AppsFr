@@ -6,6 +6,7 @@ import Container from "@/components/shared/Container";
 import BottomStickyBar from "@/components/template/BottomStickyBar";
 import OverviewSection from "./OverviewSection";
 import AddressSection from "./AddressSection";
+import PaketSection from "./PaketSection";
 import ProfileImageSection from "./ProfileImageSection";
 import AccountSection from "./AccountSection";
 import isEmpty from "lodash/isEmpty";
@@ -32,6 +33,7 @@ const validationSchema = z.object({
   provinsi: z.string().min(1, { message: "Provinsi harus diisi" }),
   alamat: z.string().min(1, { message: "Alamat harus diisi" }),
   kota: z.string().min(1, { message: "Kota harus diisi" }),
+  paketId: z.string().optional(),
   logo: z.any().optional(),
   tags: z.array(z.object({ value: z.string(), label: z.string() })).optional(),
   banAccount: z.boolean().optional(),
@@ -84,6 +86,7 @@ const CustomerForm = (props: CustomerFormProps) => {
           <div className="gap-4 flex flex-col flex-auto">
             <OverviewSection control={control} errors={errors} />
             <AddressSection control={control} errors={errors} />
+            <PaketSection control={control} errors={errors} />
           </div>
           <div className="md:w-[370px] gap-4 flex flex-col">
             <ProfileImageSection control={control} errors={errors} />

@@ -23,6 +23,7 @@ export interface CreateSekolahRequest {
     provinsi: string
     telepon: string
     email: string
+    paketId?: string
     logo?: File
 }
 
@@ -42,6 +43,9 @@ const SekolahService = {
         formData.append('provinsi', data.provinsi)
         formData.append('telepon', data.telepon)
         formData.append('email', data.email)
+        if (data.paketId) {
+            formData.append('paketId', data.paketId)
+        }
         if (data.logo) {
             formData.append('logo', data.logo)
         }
@@ -77,6 +81,9 @@ const SekolahService = {
         formData.append('provinsi', data.provinsi || '')
         formData.append('telepon', data.telepon || '')
         formData.append('email', data.email || '')
+        if (data.paketId) {
+            formData.append('paketId', data.paketId)
+        }
         if (data.logo) {
             formData.append('logo', data.logo)
         }

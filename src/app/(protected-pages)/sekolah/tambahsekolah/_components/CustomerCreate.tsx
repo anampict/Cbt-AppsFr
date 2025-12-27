@@ -29,6 +29,7 @@ const CustomerEdit = () => {
         provinsi: values.provinsi,
         telepon: values.telepon,
         email: values.email,
+        paketId: values.paketId,
         logo: values.logo instanceof File ? values.logo : undefined,
       });
 
@@ -84,6 +85,7 @@ const CustomerEdit = () => {
           provinsi: "",
           alamat: "",
           kota: "",
+          paketId: "",
           logo: "",
           tags: [],
         }}

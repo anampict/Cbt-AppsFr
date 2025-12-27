@@ -12,6 +12,7 @@ export type AddressFields = {
     provinsi: string
     alamat: string
     kota: string
+    paketId?: string
 }
 
 export type ProfileImageFields = {

@@ -1,21 +1,16 @@
-import CustomerEdit from './_components/CustomerEdit'
-import NoUserFound from '@/assets/svg/NoUserFound'
-import getCustomer from '@/server/actions/getCustomer'
-import isEmpty from 'lodash/isEmpty'
+import Container from "@/components/shared/Container";
+import PaketEditForm from "./_components/PaketEditForm";
 
-export default async function Page(props: { params: Promise<{ id: string }> }) {
-    const params = await props.params
+export default async function PaketEditPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
 
-    const data = await getCustomer(params)
-
-    if (isEmpty(data)) {
-        return (
-            <div className="h-full flex flex-col items-center justify-center">
-                <NoUserFound height={280} width={280} />
-                <h2 className="mt-4">No customer found!</h2>
-            </div>
-        )
-    }
-
-    return <CustomerEdit data={data} />
+  return (
+    <Container>
+      <PaketEditForm paketId={id} />
+    </Container>
+  );
 }

@@ -1,41 +1,31 @@
 import type { KeyedMutator } from 'swr'
 
-export type User = {
+export type Paket = {
     id: string
-    name: string
-    email: string
-    img: string
-    role: string
-    lastOnline: number
-    status: string
+    namaPaket: string
+    deskripsi?: string
+    harga: number
+    maxDomain: number
+    maxAdminSekolah: number
+    maxSiswa: number
+    maxGuru: number
+    maxSoal: number
+    maxUjian: number
+    maxStorage: number
+    customDomain: boolean
+    sslEnabled: boolean
+    whiteLabel: boolean
+    apiAccess: boolean
+    isActive: boolean
+    createdAt?: string
+    updatedAt?: string
 }
 
-export type Filter = {
-    role?: string
-    status?: string
-}
+export type Pakets = Paket[]
 
-export type Users = User[]
-
-export type Role = {
-    id: string
-    name: string
-    description: string
-    users: Pick<User, 'id' | 'name' | 'email' | 'role' | 'img'>[]
-    accessRight: Record<string, string[]>
-}
-
-export type Roles = Role[]
-
-export type GetRolesPermissionsUsersResponse = {
-    list: Users
+export type GetPaketsResponse = {
+    list: Pakets
     total: number
 }
 
-export type GetRolesPermissionsRolesResponse = Roles
-
-export type MutateRolesPermissionsUsersResponse =
-    KeyedMutator<GetRolesPermissionsUsersResponse>
-
-export type MutateRolesPermissionsRolesResponse =
-    KeyedMutator<GetRolesPermissionsRolesResponse>
+export type MutatePaketsResponse = KeyedMutator<GetPaketsResponse>

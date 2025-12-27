@@ -1,21 +1,24 @@
-import CustomerDetails from './_components/CustomerDetails'
-import NoUserFound from '@/assets/svg/NoUserFound'
-import getCustomer from '@/server/actions/getCustomer'
-import isEmpty from 'lodash/isEmpty'
+import { notFound } from "next/navigation";
+import Container from "@/components/shared/Container";
+import PaketDetailContent from "./_components/PaketDetailContent";
+import NoUserFound from "@/assets/svg/NoUserFound";
 
-export default async function Page(props: { params: Promise<{ id: string }> }) {
-    const params = await props.params
+export default async function PaketDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
 
-    const data = await getCustomer(params)
+  // TODO: Implement getPaket server action
+  // For now, we'll use a placeholder
+  // const paket = await getPaket({ id });
 
-    if (isEmpty(data)) {
-        return (
-            <div className="h-full flex flex-col items-center justify-center">
-                <NoUserFound height={280} width={280} />
-                <h2 className="mt-4">No customer found!</h2>
-            </div>
-        )
-    }
+  // Temporary: fetch from client side will be handled in the component
 
-    return <CustomerDetails data={data} />
+  return (
+    <Container>
+      <PaketDetailContent paketId={id} />
+    </Container>
+  );
 }
