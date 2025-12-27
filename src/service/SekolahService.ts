@@ -18,9 +18,13 @@ export interface SekolahResponse {
 export interface CreateSekolahRequest {
     npsn: string
     nama: string
-    alamat: string
-    kota: string
+    provinsiKode: string
     provinsi: string
+    kotaKode: string
+    kota: string
+    kecamatanKode: string
+    kecamatan: string
+    alamat: string
     telepon: string
     email: string
     paketId?: string
@@ -38,9 +42,13 @@ const SekolahService = {
         const formData = new FormData()
         formData.append('npsn', data.npsn)
         formData.append('nama', data.nama)
-        formData.append('alamat', data.alamat)
-        formData.append('kota', data.kota)
+        formData.append('provinsiKode', data.provinsiKode)
         formData.append('provinsi', data.provinsi)
+        formData.append('kotaKode', data.kotaKode)
+        formData.append('kota', data.kota)
+        formData.append('kecamatanKode', data.kecamatanKode)
+        formData.append('kecamatan', data.kecamatan)
+        formData.append('alamat', data.alamat)
         formData.append('telepon', data.telepon)
         formData.append('email', data.email)
         if (data.paketId) {

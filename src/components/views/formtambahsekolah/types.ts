@@ -9,9 +9,13 @@ export type OverviewFields = {
 }
 
 export type AddressFields = {
+    provinsiKode: string
     provinsi: string
-    alamat: string
+    kotaKode: string
     kota: string
+    kecamatanKode: string
+    kecamatan: string
+    alamat: string
     paketId?: string
 }
 

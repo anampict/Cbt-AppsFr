@@ -1,215 +1,325 @@
-'use client'
+"use client";
 
-import { useState, useEffect, useRef } from 'react'
-import Card from '@/components/ui/Card'
-import Select from '@/components/ui/Select'
-import GrowShrinkValue from '@/components/shared/GrowShrinkValue'
-import AbbreviateNumber from '@/components/shared/AbbreviateNumber'
-import Loading from '@/components/shared/Loading'
-import useTheme from '@/utils/hooks/useTheme'
-import classNames from '@/utils/classNames'
-import { COLOR_1, COLOR_2, COLOR_4 } from '@/constants/chart.constant'
-import { options } from '../constants'
-import { NumericFormat } from 'react-number-format'
-import { TbCoin, TbShoppingBagCheck, TbEye } from 'react-icons/tb'
-import dynamic from 'next/dynamic'
-import type { ReactNode } from 'react'
-import type { StatisticData, Period, StatisticCategory } from '../types'
+import { useState, useEffect } from "react";
+import Card from "@/components/ui/Card";
+import Loading from "@/components/shared/Loading";
+import classNames from "@/utils/classNames";
+import { NumericFormat } from "react-number-format";
+import {
+  TbSchool,
+  TbUser,
+  TbWorld,
+  TbClock,
+  TbCalendar,
+  TbCalendarStats,
+  TbShield,
+  TbUserCircle,
+  TbPackage,
+  TbMapPin,
+} from "react-icons/tb";
+import DashboardService from "@/service/DashboardService";
+import dynamic from "next/dynamic";
+import type { ReactNode } from "react";
+import type { DashboardStats } from "@/service/DashboardService";
 
-const Chart = dynamic(() => import('@/components/shared/Chart'), {
-    ssr: false,
-    loading: () => (
-        <div className="h-[425px] flex items-center justify-center">
-            <Loading loading />
+const Chart = dynamic(() => import("@/components/shared/Chart"), {
+  ssr: false,
+  loading: () => (
+    <div className="h-[300px] flex items-center justify-center">
+      <Loading loading />
+    </div>
+  ),
+});
+
+type StatCardProps = {
+  title: string;
+  value: number | ReactNode;
+  icon: ReactNode;
+  iconClass: string;
+  subtitle?: string;
+};
+
+const StatCard = ({
+  title,
+  value,
+  icon,
+  iconClass,
+  subtitle,
+}: StatCardProps) => {
+  return (
+    <div className="p-4 rounded-2xl bg-white dark:bg-gray-900 shadow-md hover:shadow-lg transition-shadow">
+      <div className="flex items-center justify-between">
+        <div className="flex-1">
+          <div className="text-gray-600 dark:text-gray-400 text-sm mb-2">
+            {title}
+          </div>
+          <h3 className="font-bold text-2xl mb-1">{value}</h3>
+          {subtitle && <div className="text-xs text-gray-500">{subtitle}</div>}
         </div>
-    ),
-})
-
-type StatisticCardProps = {
-    title: string
-    value: number | ReactNode
-    icon: ReactNode
-    growShrink: number
-    iconClass: string
-    label: StatisticCategory
-    compareFrom: string
-    active: boolean
-    onClick: (label: StatisticCategory) => void
-}
-
-type StatisticGroupsProps = {
-    data: StatisticData
-}
-
-const chartColors: Record<StatisticCategory, string> = {
-    totalProfit: COLOR_1,
-    totalOrder: COLOR_2,
-    totalImpression: COLOR_4,
-}
-
-const StatisticCard = (props: StatisticCardProps) => {
-    const {
-        title,
-        value,
-        label,
-        icon,
-        growShrink,
-        iconClass,
-        active,
-        compareFrom,
-        onClick,
-    } = props
-
-    return (
-        <button
-            className={classNames(
-                'p-4 rounded-2xl cursor-pointer ltr:text-left rtl:text-right transition duration-150 outline-hidden',
-                active && 'bg-white dark:bg-gray-900 shadow-md',
-            )}
-            onClick={() => onClick(label)}
+        <div
+          className={classNames(
+            "flex items-center justify-center w-12 h-12 rounded-xl text-white text-2xl",
+            iconClass
+          )}
         >
-            <div className="flex md:flex-col-reverse gap-2 2xl:flex-row justify-between relative">
-                <div>
-                    <div className="mb-4 text-sm font-semibold">{title}</div>
-                    <h3 className="mb-1">{value}</h3>
-                    <div className="inline-flex items-center flex-wrap gap-1">
-                        <GrowShrinkValue
-                            className="font-bold"
-                            value={growShrink}
-                            suffix="%"
-                            positiveIcon="+"
-                            negativeIcon=""
-                        />
-                        <span>{compareFrom}</span>
-                    </div>
-                </div>
-                <div
-                    className={classNames(
-                        'flex items-center justify-center min-h-12 min-w-12 max-h-12 max-w-12 text-gray-900 rounded-full text-2xl',
-                        iconClass,
-                    )}
-                >
-                    {icon}
-                </div>
-            </div>
-        </button>
-    )
-}
+          {icon}
+        </div>
+      </div>
+    </div>
+  );
+};
 
-const Overview = ({ data }: StatisticGroupsProps) => {
-    const [selectedCategory, setSelectedCategory] =
-        useState<StatisticCategory>('totalProfit')
+const Overview = () => {
+  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-    const [selectedPeriod, setSelectedPeriod] = useState<Period>('thisMonth')
+  useEffect(() => {
+    fetchStats();
+  }, []);
 
-    const sideNavCollapse = useTheme((state) => state.layout.sideNavCollapse)
+  const fetchStats = async () => {
+    try {
+      setLoading(true);
+      const response = await DashboardService.getStats();
+      setStats(response.data);
+      setError(null);
+    } catch (err: any) {
+      console.error("Error fetching dashboard stats:", err);
+      setError(err.response?.data?.message || "Gagal memuat data statistik");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    const isFirstRender = useRef(true)
-
-    useEffect(() => {
-        if (!sideNavCollapse && isFirstRender.current) {
-            isFirstRender.current = false
-            return
-        }
-
-        if (!isFirstRender.current) {
-            if (typeof window !== 'undefined') {
-                window.dispatchEvent(new Event('resize'))
-            }
-        }
-    }, [sideNavCollapse])
-
+  if (loading) {
     return (
-        <Card>
-            <div className="flex items-center justify-between">
-                <h4>Overview</h4>
-                <Select
-                    instanceId="overview-period"
-                    className="w-[120px]"
-                    size="sm"
-                    placeholder="Select period"
-                    value={options.filter(
-                        (option) => option.value === selectedPeriod,
-                    )}
-                    options={options}
-                    isSearchable={false}
-                    onChange={(option) => {
-                        if (option?.value) {
-                            setSelectedPeriod(option?.value)
-                        }
-                    }}
-                />
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 rounded-2xl p-3 bg-gray-100 dark:bg-gray-700 mt-4">
-                <StatisticCard
-                    title="Total profit"
-                    value={
-                        <NumericFormat
-                            displayType="text"
-                            value={data.totalProfit[selectedPeriod].value}
-                            prefix={'$'}
-                            thousandSeparator={true}
-                        />
-                    }
-                    growShrink={data.totalProfit[selectedPeriod].growShrink}
-                    iconClass="bg-sky-200"
-                    icon={<TbCoin />}
-                    label="totalProfit"
-                    active={selectedCategory === 'totalProfit'}
-                    compareFrom={data.totalProfit[selectedPeriod].comparePeriod}
-                    onClick={setSelectedCategory}
-                />
-                <StatisticCard
-                    title="Total order"
-                    value={
-                        <NumericFormat
-                            displayType="text"
-                            value={data.totalOrder[selectedPeriod].value}
-                            thousandSeparator={true}
-                        />
-                    }
-                    growShrink={data.totalOrder[selectedPeriod].growShrink}
-                    iconClass="bg-emerald-200"
-                    icon={<TbShoppingBagCheck />}
-                    label="totalOrder"
-                    active={selectedCategory === 'totalOrder'}
-                    compareFrom={data.totalProfit[selectedPeriod].comparePeriod}
-                    onClick={setSelectedCategory}
-                />
-                <StatisticCard
-                    title="Impression"
-                    value={
-                        <AbbreviateNumber
-                            value={data.totalImpression[selectedPeriod].value}
-                        />
-                    }
-                    growShrink={data.totalImpression[selectedPeriod].growShrink}
-                    iconClass="bg-purple-200"
-                    icon={<TbEye />}
-                    label="totalImpression"
-                    active={selectedCategory === 'totalImpression'}
-                    compareFrom={data.totalProfit[selectedPeriod].comparePeriod}
-                    onClick={setSelectedCategory}
-                />
-            </div>
-            <div className="min-h-[425px]">
-                <Chart
-                    type="line"
-                    series={
-                        data[selectedCategory][selectedPeriod].chartData.series
-                    }
-                    xAxis={
-                        data[selectedCategory][selectedPeriod].chartData.date
-                    }
-                    height="410px"
-                    customOptions={{
-                        legend: { show: false },
-                        colors: [chartColors[selectedCategory]],
-                    }}
-                />
-            </div>
-        </Card>
-    )
-}
+      <Card>
+        <div className="flex items-center justify-center py-20">
+          <Loading loading />
+        </div>
+      </Card>
+    );
+  }
 
-export default Overview
+  if (error) {
+    return (
+      <Card>
+        <div className="text-center py-10">
+          <p className="text-red-500 mb-4">{error}</p>
+          <button
+            onClick={fetchStats}
+            className="px-4 py-2 bg-primary text-white rounded-lg hover:opacity-80"
+          >
+            Coba Lagi
+          </button>
+        </div>
+      </Card>
+    );
+  }
+
+  if (!stats) {
+    return null;
+  }
+
+  // Prepare chart data for distribusi paket
+  const paketChartData = {
+    series: stats.distribusiPaket.map((p) => p.jumlah),
+    labels: stats.distribusiPaket.map((p) => p.paketNama),
+  };
+
+  // Prepare chart data for top provinsi
+  const provinsiChartData = {
+    series: [
+      {
+        name: "Jumlah Sekolah",
+        data: stats.top5Provinsi.map((p) => p.jumlah),
+      },
+    ],
+    categories: stats.top5Provinsi.map((p) => p.provinsi),
+  };
+
+  return (
+    <div className="flex flex-col gap-4">
+      {/* Main Stats */}
+      <Card>
+        <h4 className="mb-4">Statistik Utama</h4>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <StatCard
+            title="Total Sekolah"
+            value={
+              <NumericFormat
+                displayType="text"
+                value={stats.overview.totalSekolah}
+                thousandSeparator={true}
+              />
+            }
+            iconClass="bg-blue-500"
+            icon={<TbSchool />}
+          />
+          <StatCard
+            title="Total Pengguna"
+            value={
+              <NumericFormat
+                displayType="text"
+                value={stats.overview.totalAdmin}
+                thousandSeparator={true}
+              />
+            }
+            iconClass="bg-green-500"
+            icon={<TbUser />}
+            subtitle={`${stats.adminBreakdown.totalSuperadmin} Superadmin, ${stats.adminBreakdown.totalAdminSekolah} Admin Sekolah`}
+          />
+          <StatCard
+            title="Total Domain"
+            value={
+              <NumericFormat
+                displayType="text"
+                value={stats.overview.totalDomain}
+                thousandSeparator={true}
+              />
+            }
+            iconClass="bg-purple-500"
+            icon={<TbWorld />}
+          />
+        </div>
+      </Card>
+
+      {/* Sekolah Baru */}
+      <Card>
+        <h4 className="mb-4">Sekolah Terbaru</h4>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <StatCard
+            title="Hari Ini"
+            value={
+              <NumericFormat
+                displayType="text"
+                value={stats.sekolahBaru.hariIni}
+                thousandSeparator={true}
+              />
+            }
+            iconClass="bg-cyan-500"
+            icon={<TbClock />}
+          />
+          <StatCard
+            title="Minggu Ini"
+            value={
+              <NumericFormat
+                displayType="text"
+                value={stats.sekolahBaru.mingguIni}
+                thousandSeparator={true}
+              />
+            }
+            iconClass="bg-indigo-500"
+            icon={<TbCalendar />}
+          />
+          <StatCard
+            title="Bulan Ini"
+            value={
+              <NumericFormat
+                displayType="text"
+                value={stats.sekolahBaru.bulanIni}
+                thousandSeparator={true}
+              />
+            }
+            iconClass="bg-pink-500"
+            icon={<TbCalendarStats />}
+          />
+        </div>
+      </Card>
+
+      {/* Charts Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* Distribusi Paket */}
+        <Card>
+          <h4 className="mb-4 flex items-center gap-2">
+            <TbPackage className="text-xl" />
+            Distribusi Paket
+          </h4>
+          <Chart
+            type="donut"
+            series={paketChartData.series}
+            height="300px"
+            customOptions={{
+              labels: paketChartData.labels,
+              legend: {
+                position: "bottom",
+              },
+              plotOptions: {
+                pie: {
+                  donut: {
+                    labels: {
+                      show: true,
+                      total: {
+                        show: true,
+                        label: "Total",
+                      },
+                    },
+                  },
+                },
+              },
+            }}
+          />
+        </Card>
+
+        {/* Top 5 Provinsi */}
+        <Card>
+          <h4 className="mb-4 flex items-center gap-2">
+            <TbMapPin className="text-xl" />
+            Top 5 Provinsi
+          </h4>
+          <Chart
+            type="bar"
+            series={provinsiChartData.series}
+            xAxis={provinsiChartData.categories}
+            height="300px"
+            customOptions={{
+              plotOptions: {
+                bar: {
+                  horizontal: true,
+                  borderRadius: 4,
+                },
+              },
+              dataLabels: {
+                enabled: true,
+              },
+            }}
+          />
+        </Card>
+      </div>
+
+      {/* Admin Breakdown */}
+      <Card>
+        <h4 className="mb-4">Breakdown Admin</h4>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <StatCard
+            title="Superadmin"
+            value={
+              <NumericFormat
+                displayType="text"
+                value={stats.adminBreakdown.totalSuperadmin}
+                thousandSeparator={true}
+              />
+            }
+            iconClass="bg-red-500"
+            icon={<TbShield />}
+          />
+          <StatCard
+            title="Admin Sekolah"
+            value={
+              <NumericFormat
+                displayType="text"
+                value={stats.adminBreakdown.totalAdminSekolah}
+                thousandSeparator={true}
+              />
+            }
+            iconClass="bg-orange-500"
+            icon={<TbUserCircle />}
+          />
+        </div>
+      </Card>
+    </div>
+  );
+};
+
+export default Overview;
