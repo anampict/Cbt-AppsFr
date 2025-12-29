@@ -79,6 +79,16 @@ const navigationConfig: NavigationTree[] = [
         authority: [],
         subMenu: [],
     },
+    {
+        key: 'maintenance',
+        path: '/maintenance',
+        title: 'Maintenance',
+        translateKey: 'nav.maintenance',
+        icon: 'maintenance',
+        type: NAV_ITEM_TYPE_ITEM,
+        authority: [],
+        subMenu: [],
+    },
 ]
 
 export default navigationConfig
