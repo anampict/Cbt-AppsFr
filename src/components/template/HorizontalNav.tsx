@@ -1,35 +1,35 @@
-'use client'
+"use client";
 
-import HorizontalMenuContent from './HorizontalMenuContent'
-import useCurrentSession from '@/utils/hooks/useCurrentSession'
-import useNavigation from '@/utils/hooks/useNavigation'
-import queryRoute from '@/utils/queryRoute'
-import appConfig from '@/configs/app.config'
-import { usePathname } from 'next/navigation'
+import HorizontalMenuContent from "./HorizontalMenuContent";
+import useCurrentSession from "@/utils/hooks/useCurrentSession";
+import useNavigation from "@/utils/hooks/useNavigation";
+import queryRoute from "@/utils/queryRoute";
+import appConfig from "@/configs/app.config";
+import { usePathname } from "next/navigation";
 
 const HorizontalNav = ({
-    translationSetup = appConfig.activeNavTranslation,
+  translationSetup = appConfig.activeNavTranslation,
 }: {
-    translationSetup?: boolean
+  translationSetup?: boolean;
 }) => {
-    const pathname = usePathname()
+  const pathname = usePathname();
 
-    const route = queryRoute(pathname)
+  const route = queryRoute(pathname);
 
-    const currentRouteKey = route?.key || ''
+  const currentRouteKey = route?.key || "";
 
-    const { session } = useCurrentSession()
+  const { session } = useCurrentSession();
 
-    const { navigationTree } = useNavigation()
+  const { navigationTree } = useNavigation();
 
-    return (
-        <HorizontalMenuContent
-            navigationTree={navigationTree}
-            routeKey={currentRouteKey}
-            userAuthority={session?.user?.authority || []}
-            translationSetup={translationSetup}
-        />
-    )
-}
+  return (
+    <HorizontalMenuContent
+      navigationTree={navigationTree}
+      routeKey={currentRouteKey}
+      userAuthority={session?.user?.role ? [session.user.role] : []}
+      translationSetup={translationSetup}
+    />
+  );
+};
 
-export default HorizontalNav
+export default HorizontalNav;

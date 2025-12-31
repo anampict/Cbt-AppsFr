@@ -32,6 +32,8 @@ export default {
                     image: user.avatar,
                     authority: user.authority,
                     backendToken: user.backendToken,
+                    role: user.role,
+                    sekolahId: user.sekolahId,
                 }
             },
         }),
@@ -42,6 +44,8 @@ export default {
             if (user) {
                 token.authority = user.authority
                 token.backendToken = user.backendToken
+                token.role = user.role
+                token.sekolahId = user.sekolahId
             }
             return token
         },
@@ -53,6 +57,8 @@ export default {
                     ...session.user,
                     id: token.sub,
                     backendToken: token.backendToken,
+                    role: token.role,
+                    sekolahId: token.sekolahId,
                     /** Uncomment this if you want to enable role based access */
                     // authority: token.authority,
                 },

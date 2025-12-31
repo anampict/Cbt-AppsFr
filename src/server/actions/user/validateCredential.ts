@@ -9,6 +9,8 @@ export interface ValidatedUser {
     avatar?: string
     authority?: string
     backendToken?: string
+    role?: string
+    sekolahId?: string
 }
 
 const validateCredential = async (values: SignInCredential): Promise<ValidatedUser | null> => {
@@ -37,6 +39,8 @@ const validateCredential = async (values: SignInCredential): Promise<ValidatedUs
                 avatar: response.data.avatar,
                 authority: response.data.authority,
                 backendToken: response.access_token,
+                role: response.data.role,
+                sekolahId: response.data.sekolahId,
             }
             console.log('[validateCredential] Login successful for user:', email)
             return user

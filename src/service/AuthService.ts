@@ -12,6 +12,7 @@ export interface BackendLoginResponse {
         name: string
         email: string
         role: string
+        sekolahId?: string
         avatar?: string
     }
     success?: boolean
@@ -22,6 +23,8 @@ export interface BackendLoginResponse {
         email: string
         avatar?: string
         authority?: string
+        role?: string
+        sekolahId?: string
     }
 }
 
@@ -34,6 +37,8 @@ export interface LoginResponse {
         email: string
         avatar?: string
         authority?: string
+        role?: string
+        sekolahId?: string
     }
     access_token?: string
     refresh_token?: string
@@ -105,6 +110,8 @@ const AuthService = {
                         email: backendResponse.user.email,
                         avatar: backendResponse.user.avatar,
                         authority: backendResponse.user.role,
+                        role: backendResponse.user.role,
+                        sekolahId: backendResponse.user.sekolahId,
                     },
                     access_token: backendResponse.access_token,
                     refresh_token: backendResponse.refresh_token,

@@ -24,7 +24,7 @@ const navigationConfig: NavigationTree[] = [
         translateKey: 'nav.sekolah',
         icon: 'singleMenu',
         type: NAV_ITEM_TYPE_COLLAPSE,
-        authority: [],
+        authority: ['SUPER_ADMIN'], // Hanya untuk SUPER_ADMIN
         subMenu: [
             {
                 key: 'sekolah',
@@ -33,7 +33,7 @@ const navigationConfig: NavigationTree[] = [
                 translateKey: 'nav.sekolah',
                 icon: '',
                 type: NAV_ITEM_TYPE_ITEM,
-                authority: [],
+                authority: ['SUPER_ADMIN'],
                 subMenu: [],
             },
         ],
@@ -45,7 +45,7 @@ const navigationConfig: NavigationTree[] = [
                 translateKey: 'nav.domain',
                 icon: 'groupCollapseMenu',
                 type: NAV_ITEM_TYPE_COLLAPSE,
-                authority: [],
+                authority: ['SUPER_ADMIN'], // Hanya untuk SUPER_ADMIN
                 subMenu: [
                     {
                         key: 'domain',
@@ -54,7 +54,7 @@ const navigationConfig: NavigationTree[] = [
                         translateKey: 'nav.domain',
                         icon: '',
                         type: NAV_ITEM_TYPE_ITEM,
-                        authority: [],
+                        authority: ['SUPER_ADMIN'],
                         subMenu: [],
                     },
                 ],
@@ -66,7 +66,7 @@ const navigationConfig: NavigationTree[] = [
         translateKey: 'nav.manajemenadmin',
         icon: 'user',
         type: NAV_ITEM_TYPE_ITEM,
-        authority: [],
+        authority: ['SUPER_ADMIN'], // Hanya untuk SUPER_ADMIN
         subMenu: [],
     },
     {
@@ -76,7 +76,7 @@ const navigationConfig: NavigationTree[] = [
         translateKey: 'nav.manajemenadmin',
         icon: 'paket',
         type: NAV_ITEM_TYPE_ITEM,
-        authority: [],
+        authority: ['SUPER_ADMIN'], // Hanya untuk SUPER_ADMIN
         subMenu: [],
     },
     {
@@ -86,7 +86,7 @@ const navigationConfig: NavigationTree[] = [
         translateKey: 'nav.maintenance',
         icon: 'maintenance',
         type: NAV_ITEM_TYPE_ITEM,
-        authority: [],
+        authority: ['SUPER_ADMIN'], // Hanya untuk SUPER_ADMIN
         subMenu: [],
     },
 ]
