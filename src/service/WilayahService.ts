@@ -18,6 +18,21 @@ export interface Kecamatan {
     level: number
 }
 
+export interface Kelurahan {
+    kode: string
+    nama: string
+    kecamatan: string
+    kota: string
+    provinsi: string
+    level: number
+}
+
+export interface WilayahAutocomplete {
+    kode: string
+    label: string
+    level: number
+}
+
 export interface WilayahResponse<T> {
     message: string
     data: T[]
@@ -56,6 +71,23 @@ const WilayahService = {
             params.search = search
         }
         return AxiosBase.get<WilayahResponse<Kecamatan>>('/wilayah/kecamatan', {
+            params,
+        })
+    },
+
+    async getKelurahan(search?: string, limit: number = 10) {
+        const params: Record<string, string | number> = { limit }
+        if (search) {
+            params.search = search
+        }
+        return AxiosBase.get<WilayahResponse<Kelurahan>>('/wilayah/kelurahan', {
+            params,
+        })
+    },
+
+    async autocomplete(query: string, limit: number = 20) {
+        const params: Record<string, string | number> = { query, limit }
+        return AxiosBase.get<WilayahResponse<WilayahAutocomplete>>('/wilayah/autocomplete', {
             params,
         })
     },

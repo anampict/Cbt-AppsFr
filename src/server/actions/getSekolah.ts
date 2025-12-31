@@ -6,8 +6,21 @@ interface SekolahDetail {
     npsn: string
     nama: string
     alamat: string
+    alamatLengkap?: string
+    kelurahanKode?: string
+    kecamatanKode?: string
+    kotaKode?: string
+    provinsiKode?: string
     kota: string
     provinsi: string
+    kecamatan?: string
+    kelurahan?: string
+    wilayahLabel?: string
+    paketId?: string
+    paket?: {
+        id: string
+        namaPaket: string
+    }
     telepon: string
     email: string
     createdAt: string

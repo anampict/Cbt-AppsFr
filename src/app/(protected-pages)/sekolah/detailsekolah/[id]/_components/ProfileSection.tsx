@@ -25,9 +25,13 @@ type ProfileSectionProps = {
     npsn: string;
     email: string;
     telepon: string;
-    alamat: string;
-    kota: string;
-    provinsi: string;
+    wilayahLabel?: string;
+    alamatLengkap?: string;
+    kelurahanKode?: string;
+    // Legacy fields
+    alamat?: string;
+    kota?: string;
+    provinsi?: string;
     createdAt: string;
     updatedAt: string;
   }>;
@@ -105,9 +109,18 @@ const ProfileSection = ({ data = {} }: ProfileSectionProps) => {
           <SekolahInfoField title="NPSN" value={data.npsn} />
           <SekolahInfoField title="Email" value={data.email} />
           <SekolahInfoField title="Telepon" value={data.telepon} />
-          <SekolahInfoField title="Alamat" value={data.alamat} />
-          <SekolahInfoField title="Kota" value={data.kota} />
-          <SekolahInfoField title="Provinsi" value={data.provinsi} />
+          {(data.kelurahan || data.kecamatan) && (
+            <SekolahInfoField
+              title="Wilayah"
+              value={[data.kelurahan, data.kecamatan]
+                .filter(Boolean)
+                .join(", ")}
+            />
+          )}
+          <SekolahInfoField
+            title="Alamat Lengkap"
+            value={data.alamatLengkap || data.alamat || "-"}
+          />
         </div>
         <div className="flex flex-col gap-4 mt-10">
           <Button

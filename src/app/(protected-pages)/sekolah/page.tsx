@@ -8,6 +8,8 @@ import CustomerListSelected from "./_components/CustomerListSelected";
 import { getSekolahList } from "@/server/actions/getSekolahList";
 import type { PageProps } from "@/@types/common";
 
+export const dynamic = "force-dynamic";
+
 export default async function Page({ searchParams }: PageProps) {
   const params = await searchParams;
   const data = await getSekolahList(params);

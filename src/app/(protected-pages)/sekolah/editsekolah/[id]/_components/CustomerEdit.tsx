@@ -11,6 +11,7 @@ import sleep from "@/utils/sleep";
 import { TbTrash, TbArrowNarrowLeft } from "react-icons/tb";
 import { useRouter } from "next/navigation";
 import SekolahService from "@/service/SekolahService";
+import { revalidateSekolahPages } from "../actions";
 import type { CustomerFormSchema } from "@/components/views/formeditsekolah/types";
 import type { Customer } from "../types";
 
@@ -34,9 +35,9 @@ const CustomerEdit = ({ data }: CustomerEditProps) => {
         nama: values.nama,
         email: values.email,
         telepon: values.telepon,
-        provinsi: values.provinsi,
-        alamat: values.alamat,
-        kota: values.kota,
+        kelurahanKode: values.kelurahanKode,
+        alamatLengkap: values.alamatLengkap,
+        paketId: values.paketId,
         logo: values.logo instanceof File ? values.logo : undefined,
       });
 
@@ -44,6 +45,16 @@ const CustomerEdit = ({ data }: CustomerEditProps) => {
         <Notification type="success">Sekolah berhasil diubah!</Notification>,
         { placement: "top-center" }
       );
+
+      // Revalidate halaman sekolah
+      await revalidateSekolahPages();
+
+      // Force refresh router cache
+      router.refresh();
+
+      await sleep(500);
+
+      // Redirect ke halaman list
       router.push("/sekolah");
     } catch (error: any) {
       console.error("Error updating sekolah:", error);
@@ -58,14 +69,20 @@ const CustomerEdit = ({ data }: CustomerEditProps) => {
 
   const getDefaultValues = () => {
     if (data) {
+      // Susun wilayahLabel dari data backend
+      const wilayahParts = [data.kelurahan, data.kecamatan].filter(Boolean);
+      const wilayahLabel =
+        wilayahParts.length > 0 ? wilayahParts.join(", ") : "";
+
       return {
         npsn: data.npsn || "",
         nama: data.nama || "",
         email: data.email || "",
         telepon: data.telepon || "",
-        provinsi: data.provinsi || "",
-        alamat: data.alamat || "",
-        kota: data.kota || "",
+        kelurahanKode: data.kelurahanKode || "",
+        alamatLengkap: data.alamatLengkap || "",
+        wilayahLabel: wilayahLabel,
+        paketId: data.paketId || "",
         logo: data.logoUrl || "",
       };
     }

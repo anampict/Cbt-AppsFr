@@ -6,8 +6,16 @@ interface SekolahItem {
     npsn: string
     nama: string
     alamat: string
+    alamatLengkap?: string
+    kelurahanKode?: string
+    kecamatanKode?: string
+    kotaKode?: string
+    provinsiKode?: string
     kota: string
     provinsi: string
+    kecamatan?: string
+    kelurahan?: string
+    wilayahLabel?: string
     telepon: string
     email: string
     createdAt: string
@@ -85,8 +93,16 @@ export const getSekolahList = async (_queryParams: {
             npsn: sekolah.npsn,
             nama: sekolah.nama,
             alamat: sekolah.alamat,
+            alamatLengkap: sekolah.alamatLengkap,
+            kelurahanKode: sekolah.kelurahanKode,
+            kecamatanKode: sekolah.kecamatanKode,
+            kotaKode: sekolah.kotaKode,
+            provinsiKode: sekolah.provinsiKode,
             kota: sekolah.kota,
             provinsi: sekolah.provinsi,
+            kecamatan: sekolah.kecamatan,
+            kelurahan: sekolah.kelurahan,
+            wilayahLabel: sekolah.wilayahLabel,
             telepon: sekolah.telepon,
             email: sekolah.email,
             createdAt: sekolah.createdAt,

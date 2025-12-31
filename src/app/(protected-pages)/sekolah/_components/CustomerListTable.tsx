@@ -186,12 +186,32 @@ const CustomerListTable = ({
         accessorKey: "email",
       },
       {
-        header: "Kota",
-        accessorKey: "kota",
-      },
-      {
-        header: "Provinsi",
-        accessorKey: "provinsi",
+        header: "Wilayah",
+        accessorKey: "kelurahan",
+        cell: ({ row }) => {
+          // Prioritas: kelurahan+kecamatan > wilayahLabel > kota+provinsi > alamatLengkap
+          const wilayahParts = [
+            row.original.kelurahan,
+            row.original.kecamatan,
+          ].filter(Boolean);
+
+          let wilayahText = "-";
+          if (wilayahParts.length > 0) {
+            wilayahText = wilayahParts.join(", ");
+          } else if (row.original.wilayahLabel) {
+            wilayahText = row.original.wilayahLabel;
+          } else if (row.original.kota || row.original.provinsi) {
+            const kotaProvinsi = [
+              row.original.kota,
+              row.original.provinsi,
+            ].filter(Boolean);
+            wilayahText = kotaProvinsi.join(", ");
+          } else if (row.original.alamatLengkap) {
+            wilayahText = row.original.alamatLengkap;
+          }
+
+          return <span className="text-sm">{wilayahText}</span>;
+        },
       },
       {
         header: "Telepon",

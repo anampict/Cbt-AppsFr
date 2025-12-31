@@ -9,9 +9,13 @@ export type OverviewFields = {
 }
 
 export type AddressFields = {
-    provinsi: string
-    alamat: string
-    kota: string
+    kelurahanKode: string
+    alamatLengkap: string
+    wilayahLabel?: string
+}
+
+export type PaketFields = {
+    paketId?: string
 }
 
 export type ProfileImageFields = {
@@ -30,6 +34,7 @@ export type AccountField = {
 export type CustomerFormSchema = OverviewFields &
     AddressFields &
     ProfileImageFields &
+    PaketFields &
     TagsFields &
     AccountField
 

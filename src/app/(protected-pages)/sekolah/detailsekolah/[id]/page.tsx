@@ -3,6 +3,8 @@ import NoUserFound from "@/assets/svg/NoUserFound";
 import { getSekolah } from "@/server/actions/getSekolah";
 import isEmpty from "lodash/isEmpty";
 
+export const dynamic = "force-dynamic";
+
 export default async function Page(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
 

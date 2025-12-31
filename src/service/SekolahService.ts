@@ -18,13 +18,9 @@ export interface SekolahResponse {
 export interface CreateSekolahRequest {
     npsn: string
     nama: string
-    provinsiKode: string
-    provinsi: string
-    kotaKode: string
-    kota: string
-    kecamatanKode: string
-    kecamatan: string
-    alamat: string
+    kelurahanKode: string
+    alamatLengkap: string
+    wilayahLabel?: string
     telepon: string
     email: string
     paketId?: string
@@ -42,13 +38,9 @@ const SekolahService = {
         const formData = new FormData()
         formData.append('npsn', data.npsn)
         formData.append('nama', data.nama)
-        formData.append('provinsiKode', data.provinsiKode)
-        formData.append('provinsi', data.provinsi)
-        formData.append('kotaKode', data.kotaKode)
-        formData.append('kota', data.kota)
-        formData.append('kecamatanKode', data.kecamatanKode)
-        formData.append('kecamatan', data.kecamatan)
-        formData.append('alamat', data.alamat)
+        formData.append('kelurahanKode', data.kelurahanKode)
+        formData.append('alamatLengkap', data.alamatLengkap)
+        // wilayahLabel hanya untuk keperluan frontend, tidak dikirim ke backend
         formData.append('telepon', data.telepon)
         formData.append('email', data.email)
         if (data.paketId) {
@@ -82,13 +74,13 @@ const SekolahService = {
 
     async updateSekolah(id: string, data: Partial<CreateSekolahRequest>) {
         const formData = new FormData()
-        formData.append('npsn', data.npsn || '')
-        formData.append('nama', data.nama || '')
-        formData.append('alamat', data.alamat || '')
-        formData.append('kota', data.kota || '')
-        formData.append('provinsi', data.provinsi || '')
-        formData.append('telepon', data.telepon || '')
-        formData.append('email', data.email || '')
+        if (data.npsn) formData.append('npsn', data.npsn)
+        if (data.nama) formData.append('nama', data.nama)
+        if (data.kelurahanKode) formData.append('kelurahanKode', data.kelurahanKode)
+        if (data.alamatLengkap) formData.append('alamatLengkap', data.alamatLengkap)
+        // wilayahLabel hanya untuk keperluan frontend, tidak dikirim ke backend
+        if (data.telepon) formData.append('telepon', data.telepon)
+        if (data.email) formData.append('email', data.email)
         if (data.paketId) {
             formData.append('paketId', data.paketId)
         }

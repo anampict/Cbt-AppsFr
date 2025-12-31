@@ -52,11 +52,22 @@
   }
 
   .select-menu {
-    @apply z-30! bg-white dark:bg-gray-900 rounded-xl my-2 px-2 py-1 min-h-[50px] border ring-1 border-gray-100 ring-gray-100 dark:border-gray-700 dark:ring-gray-700 shadow-[0px_48px_64px_-16px_rgba(0,0,0,0.25)];
+    @apply z-30! bg-white dark:bg-gray-900 rounded-xl my-2 px-2 py-1 min-h-[50px] max-h-[300px]! border ring-1 border-gray-100 ring-gray-100 dark:border-gray-700 dark:ring-gray-700 shadow-[0px_48px_64px_-16px_rgba(0,0,0,0.25)];
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
   }
 
   .select-option {
-    @apply flex items-center justify-between py-2.5 px-2 font-semibold cursor-default rounded-md;
+    @apply cursor-default rounded-md;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    padding: 10px 8px !important;
+    min-height: 60px;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
   }
 
   .select-clear-indicator {

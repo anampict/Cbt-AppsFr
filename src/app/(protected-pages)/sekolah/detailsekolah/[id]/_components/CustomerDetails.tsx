@@ -46,24 +46,36 @@ const CustomerDetails = ({ data }: CustomerDetailsProps) => {
                   </span>
                   <span className="font-semibold">{data.telepon || "-"}</span>
                 </div>
+                {(data.kelurahan || data.kecamatan) && (
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">
+                      Wilayah:
+                    </span>
+                    <span className="font-semibold">
+                      {[data.kelurahan, data.kecamatan]
+                        .filter(Boolean)
+                        .join(", ")}
+                    </span>
+                  </div>
+                )}
                 <div className="flex justify-between">
                   <span className="text-gray-600 dark:text-gray-400">
-                    Alamat:
+                    Alamat Lengkap:
                   </span>
-                  <span className="font-semibold">{data.alamat || "-"}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">
-                    Kota:
+                  <span className="font-semibold">
+                    {data.alamatLengkap || data.alamat || "-"}
                   </span>
-                  <span className="font-semibold">{data.kota || "-"}</span>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">
-                    Provinsi:
-                  </span>
-                  <span className="font-semibold">{data.provinsi || "-"}</span>
-                </div>
+                {data.paket && (
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-400">
+                      Paket:
+                    </span>
+                    <span className="font-semibold">
+                      {data.paket.namaPaket}
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
           </div>

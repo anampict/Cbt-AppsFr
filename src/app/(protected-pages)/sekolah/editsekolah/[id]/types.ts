@@ -43,9 +43,18 @@ export type Customer = {
     id: string
     npsn: string
     nama: string
-    alamat: string
-    kota: string
-    provinsi: string
+    kelurahanKode?: string
+    kecamatanKode?: string
+    kotaKode?: string
+    provinsiKode?: string
+    alamatLengkap?: string
+    wilayahLabel?: string
+    // Legacy fields for backward compatibility
+    alamat?: string
+    kota?: string
+    provinsi?: string
+    kecamatan?: string
+    kelurahan?: string
     telepon: string
     email: string
     createdAt: string
@@ -59,7 +68,6 @@ export type Customer = {
     name?: string
     firstName?: string
     lastName?: string
-    email?: string
     img?: string
     role?: string
     lastOnline?: number
