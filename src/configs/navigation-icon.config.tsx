@@ -10,6 +10,10 @@ import {
   PiUser,
   PiTimerDuotone,
   PiWrenchDuotone,
+  PiChalkboardTeacherDuotone,
+  PiBooksDuotone,
+  PiStudentDuotone,
+  PiUsersThreeDuotone,
 } from "react-icons/pi";
 import type { JSX } from "react";
 
@@ -25,6 +29,10 @@ const navigationIcon: NavigationIcons = {
   user: <PiUser />,
   paket: <PiTimerDuotone />,
   maintenance: <PiWrenchDuotone />,
+  guru: <PiChalkboardTeacherDuotone />,
+  mapel: <PiBooksDuotone />,
+  kelas: <PiStudentDuotone />,
+  siswa: <PiUsersThreeDuotone />,
 };
 
 export default navigationIcon;

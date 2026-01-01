@@ -50,6 +50,38 @@ export const protectedRoutes: Routes = {
             pageContainerType: 'contained',
         },
     },
+    '/guru': {
+        key: 'guru',
+        authority: ['ADMIN_SEKOLAH'],
+        meta: {
+            pageBackgroundType: 'plain',
+            pageContainerType: 'contained',
+        },
+    },
+    '/mapel': {
+        key: 'mapel',
+        authority: ['ADMIN_SEKOLAH'],
+        meta: {
+            pageBackgroundType: 'plain',
+            pageContainerType: 'contained',
+        },
+    },
+    '/kelas': {
+        key: 'kelas',
+        authority: ['ADMIN_SEKOLAH'],
+        meta: {
+            pageBackgroundType: 'plain',
+            pageContainerType: 'contained',
+        },
+    },
+    '/siswa': {
+        key: 'siswa',
+        authority: ['ADMIN_SEKOLAH'],
+        meta: {
+            pageBackgroundType: 'plain',
+            pageContainerType: 'contained',
+        },
+    },
 }
 
 export const publicRoutes: Routes = {}

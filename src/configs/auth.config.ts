@@ -46,6 +46,11 @@ export default {
                 token.backendToken = user.backendToken
                 token.role = user.role
                 token.sekolahId = user.sekolahId
+
+                console.log('[auth.config] 🔐 JWT Token created')
+                console.log('[auth.config] 🏫 SekolahId in token:', user.sekolahId)
+                console.log('[auth.config] 👤 Role in token:', user.role)
+  
             }
             return token
         },

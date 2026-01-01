@@ -24,7 +24,7 @@ const navigationConfig: NavigationTree[] = [
         translateKey: 'nav.sekolah',
         icon: 'singleMenu',
         type: NAV_ITEM_TYPE_COLLAPSE,
-        authority: ['SUPER_ADMIN'], // Hanya untuk SUPER_ADMIN
+        authority: ['SUPERADMIN'], // Hanya untuk SUPERADMIN
         subMenu: [
             {
                 key: 'sekolah',
@@ -33,7 +33,7 @@ const navigationConfig: NavigationTree[] = [
                 translateKey: 'nav.sekolah',
                 icon: '',
                 type: NAV_ITEM_TYPE_ITEM,
-                authority: ['SUPER_ADMIN'],
+                authority: ['SUPERADMIN'],
                 subMenu: [],
             },
         ],
@@ -45,7 +45,7 @@ const navigationConfig: NavigationTree[] = [
                 translateKey: 'nav.domain',
                 icon: 'groupCollapseMenu',
                 type: NAV_ITEM_TYPE_COLLAPSE,
-                authority: ['SUPER_ADMIN'], // Hanya untuk SUPER_ADMIN
+                authority: ['SUPERADMIN'], // Hanya untuk SUPERADMIN
                 subMenu: [
                     {
                         key: 'domain',
@@ -54,7 +54,7 @@ const navigationConfig: NavigationTree[] = [
                         translateKey: 'nav.domain',
                         icon: '',
                         type: NAV_ITEM_TYPE_ITEM,
-                        authority: ['SUPER_ADMIN'],
+                        authority: ['SUPERADMIN'],
                         subMenu: [],
                     },
                 ],
@@ -66,7 +66,7 @@ const navigationConfig: NavigationTree[] = [
         translateKey: 'nav.manajemenadmin',
         icon: 'user',
         type: NAV_ITEM_TYPE_ITEM,
-        authority: ['SUPER_ADMIN'], // Hanya untuk SUPER_ADMIN
+        authority: ['SUPERADMIN'], // Hanya untuk SUPERADMIN
         subMenu: [],
     },
     {
@@ -76,7 +76,7 @@ const navigationConfig: NavigationTree[] = [
         translateKey: 'nav.manajemenadmin',
         icon: 'paket',
         type: NAV_ITEM_TYPE_ITEM,
-        authority: ['SUPER_ADMIN'], // Hanya untuk SUPER_ADMIN
+        authority: ['SUPERADMIN'], // Hanya untuk SUPERADMIN
         subMenu: [],
     },
     {
@@ -86,7 +86,48 @@ const navigationConfig: NavigationTree[] = [
         translateKey: 'nav.maintenance',
         icon: 'maintenance',
         type: NAV_ITEM_TYPE_ITEM,
-        authority: ['SUPER_ADMIN'], // Hanya untuk SUPER_ADMIN
+        authority: ['SUPERADMIN'], // Hanya untuk SUPERADMIN
+        subMenu: [],
+    },
+    // Menu untuk ADMIN_SEKOLAH
+    {
+        key: 'guru',
+        path: '/guru',
+        title: 'Manajemen Guru',
+        translateKey: 'nav.guru',
+        icon: 'guru',
+        type: NAV_ITEM_TYPE_ITEM,
+        authority: ['ADMIN_SEKOLAH'], // Hanya untuk ADMIN_SEKOLAH
+        subMenu: [],
+    },
+    {
+        key: 'mapel',
+        path: '/mapel',
+        title: 'Manajemen Mapel',
+        translateKey: 'nav.mapel',
+        icon: 'mapel',
+        type: NAV_ITEM_TYPE_ITEM,
+        authority: ['ADMIN_SEKOLAH'], // Hanya untuk ADMIN_SEKOLAH
+        subMenu: [],
+    },
+    {
+        key: 'kelas',
+        path: '/kelas',
+        title: 'Manajemen Kelas',
+        translateKey: 'nav.kelas',
+        icon: 'kelas',
+        type: NAV_ITEM_TYPE_ITEM,
+        authority: ['ADMIN_SEKOLAH'], // Hanya untuk ADMIN_SEKOLAH
+        subMenu: [],
+    },
+    {
+        key: 'siswa',
+        path: '/siswa',
+        title: 'Manajemen Siswa',
+        translateKey: 'nav.siswa',
+        icon: 'siswa',
+        type: NAV_ITEM_TYPE_ITEM,
+        authority: ['ADMIN_SEKOLAH'], // Hanya untuk ADMIN_SEKOLAH
         subMenu: [],
     },
 ]
