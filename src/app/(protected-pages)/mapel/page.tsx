@@ -1,28 +1,38 @@
-import React from "react";
+import Container from "@/components/shared/Container";
+import AdaptiveCard from "@/components/shared/AdaptiveCard";
+import MapelListProvider from "./_components/MapelListProvider";
+import MapelListTable from "./_components/MapelListTable";
+import MapelListActionTools from "./_components/MapelListActionTools";
+import MapelListTableTools from "./_components/MapelListTableTools";
+import MapelListSelected from "./_components/MapelListSelected";
+import { getMapelList } from "@/server/actions/getMapelList";
+import type { PageProps } from "@/@types/common";
 
-const MapelPage = () => {
+export const dynamic = "force-dynamic";
+
+export default async function Page({ searchParams }: PageProps) {
+  const params = await searchParams;
+  const data = await getMapelList(params);
+
   return (
-    <div className="flex flex-col gap-6">
-      <div>
-        <h2 className="text-2xl font-bold">Manajemen Mata Pelajaran</h2>
-        <p className="text-gray-600 dark:text-gray-400 mt-1">
-          Kelola data mata pelajaran di sekolah Anda
-        </p>
-      </div>
-
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-8">
-        <div className="text-center">
-          <h3 className="text-xl font-semibold mb-4">
-            Halaman Manajemen Mata Pelajaran
-          </h3>
-          <p className="text-gray-500 dark:text-gray-400">
-            Fitur manajemen mata pelajaran akan tersedia segera. Di sini Anda
-            dapat menambah, mengedit, dan menghapus data mata pelajaran.
-          </p>
-        </div>
-      </div>
-    </div>
+    <MapelListProvider mapelList={data.mapels}>
+      <Container>
+        <AdaptiveCard>
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+              <h3>Daftar Mata Pelajaran</h3>
+              <MapelListActionTools />
+            </div>
+            <MapelListTableTools />
+            <MapelListTable
+              mapelListTotal={data.total}
+              pageIndex={data.pageIndex}
+              pageSize={data.pageSize}
+            />
+          </div>
+        </AdaptiveCard>
+      </Container>
+      <MapelListSelected />
+    </MapelListProvider>
   );
-};
-
-export default MapelPage;
+}
