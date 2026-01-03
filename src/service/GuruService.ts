@@ -16,6 +16,7 @@ export interface Guru {
         npsn: string
     }
     mapel: any[]
+    kelas: any[]
     fotoUrl?: string
 }
 
@@ -65,7 +66,7 @@ const GuruService = {
         // Check if data is FormData (for file upload)
         const isFormData = data instanceof FormData
         
-        return ApiService.fetchDataWithAxios<{ message: string; data: Guru }>({
+        return ApiService.fetchDataWithAxios<{ message: string; data: Guru }, any>({
             url: '/guru',
             method: 'post',
             data,
@@ -80,7 +81,7 @@ const GuruService = {
     updateGuru: async (id: string, data: Partial<GuruPayload> | FormData) => {
         const isFormData = data instanceof FormData
         
-        return ApiService.fetchDataWithAxios<{ message: string; data: Guru }>({
+        return ApiService.fetchDataWithAxios<{ message: string; data: Guru }, any>({
             url: `/guru/${id}`,
             method: 'put',
             data,
@@ -97,6 +98,14 @@ const GuruService = {
             url: `/guru/${id}/mapel`,
             method: 'put',
             data: { mapelIds },
+        })
+    },
+
+    updateGuruKelas: async (id: string, kelasIds: string[]) => {
+        return ApiService.fetchDataWithAxios<{ message: string; data: Guru }>({
+            url: `/guru/${id}/kelas`,
+            method: 'put',
+            data: { kelasIds },
         })
     },
 

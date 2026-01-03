@@ -9,6 +9,7 @@ import Upload from "@/components/ui/Upload";
 import { TbPlus, TbSearch, TbUpload } from "react-icons/tb";
 import GuruService from "@/service/GuruService";
 import MapelService from "@/service/MapelService";
+import KelasService from "@/service/KelasService";
 import { useRouter } from "next/navigation";
 import toast from "@/components/ui/toast";
 import Notification from "@/components/ui/Notification";
@@ -18,6 +19,11 @@ interface MapelOption {
   label: string;
   value: string;
   kode?: string;
+}
+
+interface KelasOption {
+  label: string;
+  value: string;
 }
 
 interface GuruAddDialogProps {
@@ -30,6 +36,8 @@ const GuruAddDialog = ({ onSuccess }: GuruAddDialogProps) => {
   const [loading, setLoading] = useState(false);
   const [searchLoading, setSearchLoading] = useState(false);
   const [mapelOptions, setMapelOptions] = useState<MapelOption[]>([]);
+  const [kelasSearchLoading, setKelasSearchLoading] = useState(false);
+  const [kelasOptions, setKelasOptions] = useState<KelasOption[]>([]);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [formData, setFormData] = useState({
     nip: "",
@@ -39,12 +47,14 @@ const GuruAddDialog = ({ onSuccess }: GuruAddDialogProps) => {
     telepon: "",
     alamat: "",
     mapelIds: [] as string[],
+    kelasIds: [] as string[],
   });
 
   const handleOpenDialog = () => {
     setDialogOpen(true);
-    // Load initial mapel list
+    // Load initial mapel and kelas list
     loadMapelOptions("");
+    loadKelasOptions("");
   };
 
   const handleCloseDialog = () => {
@@ -57,9 +67,11 @@ const GuruAddDialog = ({ onSuccess }: GuruAddDialogProps) => {
       telepon: "",
       alamat: "",
       mapelIds: [],
+      kelasIds: [],
     });
     setUploadedFile(null);
     setMapelOptions([]);
+    setKelasOptions([]);
   };
 
   const loadMapelOptions = async (search: string) => {
@@ -93,6 +105,36 @@ const GuruAddDialog = ({ onSuccess }: GuruAddDialogProps) => {
     }
   };
 
+  const loadKelasOptions = async (search: string) => {
+    try {
+      setKelasSearchLoading(true);
+      const response = await KelasService.getKelasList({
+        search,
+        limit: 100,
+      });
+
+      const options = response.data.map((kelas) => ({
+        label: `${kelas.namaKelas}`,
+        value: kelas.id,
+      }));
+
+      setKelasOptions(options);
+    } catch (error: any) {
+      console.error("Error loading kelas:", error);
+      toast.push(
+        <Notification type="danger">
+          Gagal memuat data kelas:{" "}
+          {error.response?.data?.message || error.message}
+        </Notification>,
+        {
+          placement: "top-center",
+        }
+      );
+    } finally {
+      setKelasSearchLoading(false);
+    }
+  };
+
   // Debounced search function
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedSearch = useCallback(
@@ -102,8 +144,20 @@ const GuruAddDialog = ({ onSuccess }: GuruAddDialogProps) => {
     []
   );
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debouncedKelasSearch = useCallback(
+    debounce((search: string) => {
+      loadKelasOptions(search);
+    }, 500),
+    []
+  );
+
   const handleMapelSearch = (inputValue: string) => {
     debouncedSearch(inputValue);
+  };
+
+  const handleKelasSearch = (inputValue: string) => {
+    debouncedKelasSearch(inputValue);
   };
 
   const handleFileChange = (files: File[]) => {
@@ -148,6 +202,13 @@ const GuruAddDialog = ({ onSuccess }: GuruAddDialogProps) => {
       if (formData.mapelIds.length > 0) {
         formData.mapelIds.forEach((mapelId) => {
           submitData.append("mapelIds[]", mapelId);
+        });
+      }
+
+      // Add kelas ids as JSON string array
+      if (formData.kelasIds.length > 0) {
+        formData.kelasIds.forEach((kelasId) => {
+          submitData.append("kelasIds[]", kelasId);
         });
       }
 
@@ -361,6 +422,43 @@ const GuruAddDialog = ({ onSuccess }: GuruAddDialogProps) => {
               <p className="text-xs text-gray-500 mt-1">
                 Ketik untuk mencari mata pelajaran. Bisa memilih lebih dari
                 satu.
+              </p>
+            </div>
+
+            <div>
+              <label className="block mb-2 text-sm font-medium">
+                Kelas yang Diampu
+              </label>
+              <Select
+                placeholder="Pilih kelas..."
+                options={kelasOptions}
+                value={kelasOptions.filter((opt) =>
+                  formData.kelasIds.includes(opt.value)
+                )}
+                onChange={(options) => {
+                  const selectedIds = Array.isArray(options)
+                    ? options.map((opt) => opt.value)
+                    : [];
+                  setFormData({
+                    ...formData,
+                    kelasIds: selectedIds,
+                  });
+                }}
+                onInputChange={handleKelasSearch}
+                isLoading={kelasSearchLoading}
+                isDisabled={loading}
+                isSearchable
+                isMulti
+                components={{
+                  DropdownIndicator: () => (
+                    <div className="mr-2">
+                      <TbSearch />
+                    </div>
+                  ),
+                }}
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                Ketik untuk mencari kelas. Bisa memilih lebih dari satu.
               </p>
             </div>
           </div>

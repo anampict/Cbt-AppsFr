@@ -237,6 +237,43 @@ const GuruListTable = ({
         },
       },
       {
+        header: "Kelas",
+        accessorKey: "kelas",
+        cell: ({ row }) => {
+          const kelasList = row.original.kelas;
+
+          if (!kelasList || kelasList.length === 0) {
+            return <span className="text-sm text-gray-400">-</span>;
+          }
+          const kelasNames = kelasList
+            .map((k: any) => {
+              // Handle nested structure: k.kelas.namaKelas
+              if (k.kelas && k.kelas.namaKelas) {
+                return k.kelas.namaKelas;
+              }
+              // Fallback for direct structure
+              if (k.namaKelas) {
+                return k.namaKelas;
+              }
+              return null;
+            })
+            .filter(Boolean)
+            .join(", ");
+
+          if (!kelasNames) {
+            return <span className="text-sm text-gray-400">-</span>;
+          }
+
+          return (
+            <span className="text-sm" title={kelasNames}>
+              {kelasNames.length > 40
+                ? `${kelasNames.substring(0, 40)}...`
+                : kelasNames}
+            </span>
+          );
+        },
+      },
+      {
         header: "",
         id: "action",
         cell: (props) => (

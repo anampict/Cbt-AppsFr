@@ -14,6 +14,7 @@ export type Guru = {
         npsn: string
     }
     mapel: any[]
+    kelas: any[]
     fotoUrl?: string
 }
 

@@ -74,10 +74,16 @@ export async function GET(request: NextRequest) {
         const searchParams = request.nextUrl.searchParams
         const params = Object.fromEntries(searchParams)
 
+        // Always include kelas data
+        const paramsWithIncludes = {
+            ...params,
+            includeKelas: 'true',
+        }
+
         const response = await axios.get(
             `${BACKEND_URL}/guru`,
             {
-                params,
+                params: paramsWithIncludes,
                 headers: {
                     'Authorization': `Bearer ${backendToken}`,
                 },

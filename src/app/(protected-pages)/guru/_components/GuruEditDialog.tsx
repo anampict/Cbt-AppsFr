@@ -9,6 +9,7 @@ import Upload from "@/components/ui/Upload";
 import { TbSearch, TbUpload } from "react-icons/tb";
 import GuruService, { type Guru } from "@/service/GuruService";
 import MapelService from "@/service/MapelService";
+import KelasService from "@/service/KelasService";
 import { useRouter } from "next/navigation";
 import toast from "@/components/ui/toast";
 import Notification from "@/components/ui/Notification";
@@ -18,6 +19,11 @@ interface MapelOption {
   label: string;
   value: string;
   kode?: string;
+}
+
+interface KelasOption {
+  label: string;
+  value: string;
 }
 
 interface GuruEditDialogProps {
@@ -37,6 +43,8 @@ const GuruEditDialog = ({
   const [loading, setLoading] = useState(false);
   const [searchLoading, setSearchLoading] = useState(false);
   const [mapelOptions, setMapelOptions] = useState<MapelOption[]>([]);
+  const [kelasSearchLoading, setKelasSearchLoading] = useState(false);
+  const [kelasOptions, setKelasOptions] = useState<KelasOption[]>([]);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [formData, setFormData] = useState({
     nip: guru.nip,
@@ -46,6 +54,7 @@ const GuruEditDialog = ({
     telepon: guru.telepon,
     alamat: guru.alamat,
     mapelIds: guru.mapel?.map((m: any) => m.id) || [],
+    kelasIds: guru.kelas?.map((k: any) => k.id) || [],
   });
 
   useEffect(() => {
@@ -58,9 +67,11 @@ const GuruEditDialog = ({
         telepon: guru.telepon,
         alamat: guru.alamat,
         mapelIds: guru.mapel?.map((m: any) => m.id) || [],
+        kelasIds: guru.kelas?.map((k: any) => k.id) || [],
       });
       setUploadedFile(null);
       loadMapelOptions("");
+      loadKelasOptions("");
     }
   }, [isOpen, guru]);
 
@@ -73,9 +84,11 @@ const GuruEditDialog = ({
       telepon: "",
       alamat: "",
       mapelIds: [],
+      kelasIds: [],
     });
     setUploadedFile(null);
     setMapelOptions([]);
+    setKelasOptions([]);
     onClose();
   };
 
@@ -101,6 +114,27 @@ const GuruEditDialog = ({
     }
   };
 
+  const loadKelasOptions = async (search: string) => {
+    try {
+      setKelasSearchLoading(true);
+      const response = await KelasService.getKelasList({
+        search,
+        limit: 100,
+      });
+
+      const options = response.data.map((kelas) => ({
+        label: `${kelas.namaKelas}`,
+        value: kelas.id,
+      }));
+
+      setKelasOptions(options);
+    } catch (error: any) {
+      console.error("Error loading kelas:", error);
+    } finally {
+      setKelasSearchLoading(false);
+    }
+  };
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const debouncedSearch = useCallback(
     debounce((search: string) => {
@@ -109,8 +143,20 @@ const GuruEditDialog = ({
     []
   );
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debouncedKelasSearch = useCallback(
+    debounce((search: string) => {
+      loadKelasOptions(search);
+    }, 500),
+    []
+  );
+
   const handleMapelSearch = (inputValue: string) => {
     debouncedSearch(inputValue);
+  };
+
+  const handleKelasSearch = (inputValue: string) => {
+    debouncedKelasSearch(inputValue);
   };
 
   const handleFileChange = (files: File[]) => {
@@ -143,16 +189,16 @@ const GuruEditDialog = ({
 
       // 1. Update data guru (dengan atau tanpa foto)
       let updateData: any;
-      
+
       if (uploadedFile) {
         // Jika ada foto baru, kirim sebagai FormData
         const formDataToSend = new FormData();
-        formDataToSend.append('nip', formData.nip);
-        formDataToSend.append('nama', formData.nama);
-        formDataToSend.append('email', formData.email);
-        formDataToSend.append('telepon', formData.telepon);
-        formDataToSend.append('alamat', formData.alamat);
-        formDataToSend.append('foto', uploadedFile);
+        formDataToSend.append("nip", formData.nip);
+        formDataToSend.append("nama", formData.nama);
+        formDataToSend.append("email", formData.email);
+        formDataToSend.append("telepon", formData.telepon);
+        formDataToSend.append("alamat", formData.alamat);
+        formDataToSend.append("foto", uploadedFile);
         updateData = formDataToSend;
       } else {
         // Jika tidak ada foto, kirim sebagai JSON
@@ -169,12 +215,23 @@ const GuruEditDialog = ({
 
       // 2. Update mapel jika ada perubahan
       const currentMapelIds = guru.mapel?.map((m: any) => m.mapel.id) || [];
-      const hasMapelChanged = 
+      const hasMapelChanged =
         formData.mapelIds.length !== currentMapelIds.length ||
-        formData.mapelIds.some(id => !currentMapelIds.includes(id));
+        formData.mapelIds.some((id) => !currentMapelIds.includes(id));
 
       if (hasMapelChanged) {
         await GuruService.updateGuruMapel(guru.id, formData.mapelIds);
+      }
+
+      // 3. Update kelas jika ada perubahan
+      const currentKelasIds =
+        guru.kelas?.map((k: any) => k.kelas?.id || k.id) || [];
+      const hasKelasChanged =
+        formData.kelasIds.length !== currentKelasIds.length ||
+        formData.kelasIds.some((id) => !currentKelasIds.includes(id));
+
+      if (hasKelasChanged) {
+        await GuruService.updateGuruKelas(guru.id, formData.kelasIds);
       }
 
       toast.push(
@@ -188,13 +245,13 @@ const GuruEditDialog = ({
       if (onSuccess) {
         onSuccess();
       }
-      
+
       // Small delay to ensure backend has processed
-      await new Promise(resolve => setTimeout(resolve, 100));
-      
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
       // Then close dialog
       handleCloseDialog();
-      
+
       // Final refresh
       router.refresh();
     } catch (error: any) {
@@ -384,6 +441,43 @@ const GuruEditDialog = ({
             />
             <p className="text-xs text-gray-500 mt-1">
               Ketik untuk mencari mata pelajaran
+            </p>
+          </div>
+
+          <div>
+            <label className="block mb-2 text-sm font-medium">
+              Kelas yang Diampu
+            </label>
+            <Select
+              placeholder="Pilih kelas..."
+              options={kelasOptions}
+              value={kelasOptions.filter((opt) =>
+                formData.kelasIds.includes(opt.value)
+              )}
+              onChange={(options) => {
+                const selectedIds = Array.isArray(options)
+                  ? options.map((opt) => opt.value)
+                  : [];
+                setFormData({
+                  ...formData,
+                  kelasIds: selectedIds,
+                });
+              }}
+              onInputChange={handleKelasSearch}
+              isLoading={kelasSearchLoading}
+              isDisabled={loading}
+              isSearchable
+              isMulti
+              components={{
+                DropdownIndicator: () => (
+                  <div className="mr-2">
+                    <TbSearch />
+                  </div>
+                ),
+              }}
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              Ketik untuk mencari kelas. Bisa memilih lebih dari satu.
             </p>
           </div>
         </div>

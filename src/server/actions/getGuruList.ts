@@ -71,6 +71,7 @@ export const getGuruList = async (_queryParams: {
             updatedAt: guru.updatedAt,
             sekolah: guru.sekolah,
             mapel: guru.mapel,
+            kelas: guru.kelas,
             fotoUrl: guru.fotoUrl 
                 ? guru.fotoUrl.startsWith('http')
                     ? guru.fotoUrl
