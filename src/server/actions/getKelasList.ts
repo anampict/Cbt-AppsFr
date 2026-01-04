@@ -1,10 +1,10 @@
 import axios from 'axios'
 import { auth } from '@/auth'
-import type { Guru } from '@/app/(protected-pages)/guru/types'
+import type { Kelas } from '@/app/(protected-pages)/kelas/types'
 
-interface GuruListResponse {
+interface KelasListResponse {
     message: string
-    data: Guru[]
+    data: Kelas[]
     meta: {
         total: number
         page: number
@@ -15,7 +15,7 @@ interface GuruListResponse {
     }
 }
 
-export const getGuruList = async (_queryParams: {
+export const getKelasList = async (_queryParams: {
     [key: string]: string | string[] | undefined
 }) => {
     const queryParams = _queryParams
@@ -31,7 +31,7 @@ export const getGuruList = async (_queryParams: {
 
     if (!backendToken) {
         return {
-            gurus: [],
+            kelas: [],
             total: 0,
             pageIndex: parseInt(pageIndex as string),
             pageSize: parseInt(pageSize as string),
@@ -42,8 +42,8 @@ export const getGuruList = async (_queryParams: {
     }
 
     try {
-        const response = await axios.get<GuruListResponse>(
-            'http://localhost:3000/guru',
+        const response = await axios.get<KelasListResponse>(
+            'http://localhost:3000/kelas',
             {
                 params: {
                     page: pageIndex,
@@ -58,29 +58,8 @@ export const getGuruList = async (_queryParams: {
 
         const { data, meta } = response.data
 
-        // Map backend response with defensive programming
-        const mappedData = data.map((guru) => ({
-            id: guru.id,
-            nip: guru.nip || '',
-            nama: guru.nama || '',
-            email: guru.email || '',
-            telepon: guru.telepon || '',
-            alamat: guru.alamat || '',
-            sekolahId: guru.sekolahId || '',
-            createdAt: guru.createdAt,
-            updatedAt: guru.updatedAt,
-            sekolah: guru.sekolah || { id: '', nama: '', npsn: '' },
-            mapel: Array.isArray(guru.mapel) ? guru.mapel : [],
-            kelas: Array.isArray(guru.kelas) ? guru.kelas : [],
-            fotoUrl: guru.fotoUrl 
-                ? guru.fotoUrl.startsWith('http')
-                    ? guru.fotoUrl
-                    : `http://localhost:3000${guru.fotoUrl}`
-                : undefined,
-        }))
-
         return {
-            gurus: mappedData,
+            kelas: data,
             total: meta.total,
             pageIndex: meta.page,
             pageSize: meta.limit,
@@ -89,13 +68,9 @@ export const getGuruList = async (_queryParams: {
             hasPrevPage: meta.hasPrevPage,
         }
     } catch (error: any) {
-        console.error('[GetGuruList] Error:', {
-            message: error.message,
-            response: error.response?.data,
-            stack: error.stack
-        })
+        console.error('[GetKelasList] Error:', error.response?.data || error.message)
         return {
-            gurus: [],
+            kelas: [],
             total: 0,
             pageIndex: parseInt(pageIndex as string),
             pageSize: parseInt(pageSize as string),

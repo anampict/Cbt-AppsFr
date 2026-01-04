@@ -13,6 +13,9 @@ export interface Kelas {
         nama: string
         npsn: string
     }
+    _count?: {
+        siswa: number
+    }
 }
 
 export interface KelasListResponse {
@@ -28,6 +31,11 @@ export interface KelasListResponse {
     }
 }
 
+export interface KelasResponse {
+    message: string
+    data: Kelas
+}
+
 const KelasService = {
     getKelasList: async (params?: {
         page?: number
@@ -38,6 +46,42 @@ const KelasService = {
             url: '/kelas',
             method: 'get',
             params,
+        })
+    },
+    
+    getKelasById: async (id: string) => {
+        return ApiService.fetchDataWithAxios<KelasResponse>({
+            url: `/kelas/${id}`,
+            method: 'get',
+        })
+    },
+    
+    createKelas: async (data: any) => {
+        return ApiService.fetchDataWithAxios<KelasResponse>({
+            url: '/kelas',
+            method: 'post',
+            data,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+    },
+    
+    updateKelas: async (id: string, data: any) => {
+        return ApiService.fetchDataWithAxios<KelasResponse>({
+            url: `/kelas/${id}`,
+            method: 'put',
+            data,
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+    },
+    
+    deleteKelas: async (id: string) => {
+        return ApiService.fetchDataWithAxios<{ message: string }>({
+            url: `/kelas/${id}`,
+            method: 'delete',
         })
     },
 }
