@@ -33,7 +33,7 @@ export interface MapelPayload {
     kodeMapel: string
     namaMapel: string
     deskripsi?: string | null
-    sekolahId: string
+    sekolahId?: string // Optional - backend will set this based on user session
 }
 
 const MapelService = {
@@ -60,7 +60,7 @@ const MapelService = {
         return ApiService.fetchDataWithAxios<{ message: string; data: Mapel }>({
             url: '/mapel',
             method: 'post',
-            data,
+            data: data as unknown as Record<string, unknown>,
         })
     },
 
@@ -68,7 +68,7 @@ const MapelService = {
         return ApiService.fetchDataWithAxios<{ message: string; data: Mapel }>({
             url: `/mapel/${id}`,
             method: 'put',
-            data,
+            data: data as unknown as Record<string, unknown>,
         })
     },
 

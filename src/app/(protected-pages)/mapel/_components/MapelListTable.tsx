@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { TbPencil, TbEye, TbTrash } from "react-icons/tb";
 import MapelService from "@/service/MapelService";
+import MapelEditDialog from "./MapelEditDialog";
 import type {
   OnSortParam,
   ColumnDef,
@@ -92,6 +93,13 @@ const MapelListTable = ({
     mapelName: "",
   });
   const [isDeleting, setIsDeleting] = useState(false);
+  const [editDialog, setEditDialog] = useState<{
+    isOpen: boolean;
+    mapel: Mapel | null;
+  }>({
+    isOpen: false,
+    mapel: null,
+  });
 
   const mapelList = useMapelListStore((state) => state.mapelList);
   const selectedMapel = useMapelListStore((state) => state.selectedMapel);
@@ -104,7 +112,10 @@ const MapelListTable = ({
   const { onAppendQueryParams } = useAppendQueryParams();
 
   const handleEdit = (mapel: Mapel) => {
-    router.push(`/mapel/edit/${mapel.id}`);
+    setEditDialog({
+      isOpen: true,
+      mapel,
+    });
   };
 
   const handleViewDetails = (mapel: Mapel) => {
@@ -288,6 +299,14 @@ const MapelListTable = ({
           <strong>{deleteConfirm.mapelName}</strong>?
         </p>
       </ConfirmDialog>
+      <MapelEditDialog
+        isOpen={editDialog.isOpen}
+        mapel={editDialog.mapel}
+        onClose={() => setEditDialog({ isOpen: false, mapel: null })}
+        onSuccess={() => {
+          setEditDialog({ isOpen: false, mapel: null });
+        }}
+      />
     </>
   );
 };
