@@ -1,28 +1,38 @@
-import React from "react";
+import Container from "@/components/shared/Container";
+import AdaptiveCard from "@/components/shared/AdaptiveCard";
+import SiswaListProvider from "./_components/SiswaListProvider";
+import SiswaListTable from "./_components/SiswaListTable";
+import SiswaListActionTools from "./_components/SiswaListActionTools";
+import SiswaListTableTools from "./_components/SiswaListTableTools";
+import SiswaListSelected from "./_components/SiswaListSelected";
+import { getSiswaList } from "@/server/actions/getSiswaList";
+import type { PageProps } from "@/@types/common";
 
-const SiswaPage = () => {
+export const dynamic = "force-dynamic";
+
+export default async function Page({ searchParams }: PageProps) {
+  const params = await searchParams;
+  const data = await getSiswaList(params);
+
   return (
-    <div className="flex flex-col gap-6">
-      <div>
-        <h2 className="text-2xl font-bold">Manajemen Siswa</h2>
-        <p className="text-gray-600 dark:text-gray-400 mt-1">
-          Kelola data siswa di sekolah Anda
-        </p>
-      </div>
-
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-8">
-        <div className="text-center">
-          <h3 className="text-xl font-semibold mb-4">
-            Halaman Manajemen Siswa
-          </h3>
-          <p className="text-gray-500 dark:text-gray-400">
-            Fitur manajemen siswa akan tersedia segera. Di sini Anda dapat
-            menambah, mengedit, dan menghapus data siswa.
-          </p>
-        </div>
-      </div>
-    </div>
+    <SiswaListProvider siswaList={data.siswas}>
+      <Container>
+        <AdaptiveCard>
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+              <h3>Daftar Siswa</h3>
+              <SiswaListActionTools />
+            </div>
+            <SiswaListTableTools />
+            <SiswaListTable
+              siswaListTotal={data.total}
+              pageIndex={data.pageIndex}
+              pageSize={data.pageSize}
+            />
+          </div>
+        </AdaptiveCard>
+      </Container>
+      <SiswaListSelected />
+    </SiswaListProvider>
   );
-};
-
-export default SiswaPage;
+}
