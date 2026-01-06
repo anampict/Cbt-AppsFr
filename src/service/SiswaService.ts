@@ -44,6 +44,30 @@ export interface SiswaListResponse {
     }
 }
 
+export interface SiswaByKelasResponse {
+    message: string
+    data: Siswa[]
+    meta: {
+        total: number
+        page: number
+        limit: number
+        totalPages: number
+        hasNextPage: boolean
+        hasPrevPage: boolean
+    }
+    kelasInfo: {
+        id: string
+        namaKelas: string
+        tingkat: number
+        jurusan: string
+        sekolah: {
+            id: string
+            nama: string
+            npsn: string
+        }
+    }
+}
+
 export interface SiswaPayload {
     nisn: string
     nis: string
@@ -74,6 +98,18 @@ const SiswaService = {
         return ApiService.fetchDataWithAxios<{ message: string; data: Siswa }>({
             url: `/siswa/${id}`,
             method: 'get',
+        })
+    },
+
+    getSiswaByKelas: async (kelasId: string, params?: {
+        page?: number
+        limit?: number
+        search?: string
+    }) => {
+        return ApiService.fetchDataWithAxios<SiswaByKelasResponse>({
+            url: `/siswa/by-kelas/${kelasId}`,
+            method: 'get',
+            params,
         })
     },
 

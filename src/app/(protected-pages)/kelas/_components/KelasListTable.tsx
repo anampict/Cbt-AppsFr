@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { TbPencil, TbTrash } from "react-icons/tb";
 import KelasService from "@/service/KelasService";
 import KelasEditDialog from "./KelasEditDialog";
+import KelasSiswaDialog from "./KelasSiswaDialog";
 import type {
   OnSortParam,
   ColumnDef,
@@ -76,6 +77,16 @@ const KelasListTable = ({
     kelas: null,
   });
 
+  const [siswaDialog, setSiswaDialog] = useState<{
+    isOpen: boolean;
+    kelasId: string;
+    kelasName: string;
+  }>({
+    isOpen: false,
+    kelasId: "",
+    kelasName: "",
+  });
+
   const kelasList = useKelasListStore((state) => state.kelasList);
   const selectedKelas = useKelasListStore((state) => state.selectedKelas);
   const isInitialLoading = useKelasListStore((state) => state.initialLoading);
@@ -97,6 +108,22 @@ const KelasListTable = ({
     setEditDialog({
       isOpen: false,
       kelas: null,
+    });
+  };
+
+  const handleShowSiswa = (kelas: Kelas) => {
+    setSiswaDialog({
+      isOpen: true,
+      kelasId: kelas.id,
+      kelasName: kelas.namaKelas,
+    });
+  };
+
+  const handleCloseSiswaDialog = () => {
+    setSiswaDialog({
+      isOpen: false,
+      kelasId: "",
+      kelasName: "",
     });
   };
 
@@ -220,8 +247,22 @@ const KelasListTable = ({
         accessorKey: "_count.siswa",
         cell: (props) => {
           const row = props.row.original;
+          const siswaCount = row._count?.siswa || 0;
           return (
-            <div className="text-center">{row._count?.siswa || 0} siswa</div>
+            <div
+              className={
+                siswaCount > 0
+                  ? "text-center cursor-pointer hover:text-primary font-medium transition-colors"
+                  : "text-center text-gray-500"
+              }
+              onClick={() => siswaCount > 0 && handleShowSiswa(row)}
+              role={siswaCount > 0 ? "button" : undefined}
+              title={
+                siswaCount > 0 ? "Klik untuk melihat daftar siswa" : undefined
+              }
+            >
+              {siswaCount} siswa
+            </div>
           );
         },
       },
@@ -304,6 +345,14 @@ const KelasListTable = ({
           handleCloseEditDialog();
           router.refresh();
         }}
+      />
+
+      <KelasSiswaDialog
+        isOpen={siswaDialog.isOpen}
+        onClose={handleCloseSiswaDialog}
+        kelasId={siswaDialog.kelasId}
+        kelasName={siswaDialog.kelasName}
+        onSuccess={() => router.refresh()}
       />
     </>
   );
