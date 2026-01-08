@@ -10,17 +10,14 @@ const KelasListTableTools = () => {
   const { onAppendQueryParams } = useAppendQueryParams();
   const [searchValue, setSearchValue] = useState("");
 
-  const handleSearch = () => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchValue(value);
+
     onAppendQueryParams({
-      query: searchValue,
+      query: value,
       pageIndex: "1",
     });
-  };
-
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      handleSearch();
-    }
   };
 
   return (
@@ -29,13 +26,9 @@ const KelasListTableTools = () => {
         size="sm"
         placeholder="Cari kelas..."
         value={searchValue}
-        onChange={(e) => setSearchValue(e.target.value)}
-        onKeyPress={handleKeyPress}
+        onChange={handleChange}
         className="max-w-md"
       />
-      <Button size="sm" icon={<TbSearch />} onClick={handleSearch}>
-        Cari
-      </Button>
     </div>
   );
 };
